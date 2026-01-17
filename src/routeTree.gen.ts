@@ -10,11 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SubmissionIndexRouteImport } from './routes/submission/index'
+import { Route as ResultIndexRouteImport } from './routes/result/index'
 import { Route as QuestionsIdIndexRouteImport } from './routes/questions/$id/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubmissionIndexRoute = SubmissionIndexRouteImport.update({
+  id: '/submission/',
+  path: '/submission/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultIndexRoute = ResultIndexRouteImport.update({
+  id: '/result/',
+  path: '/result/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QuestionsIdIndexRoute = QuestionsIdIndexRouteImport.update({
@@ -25,27 +37,35 @@ const QuestionsIdIndexRoute = QuestionsIdIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/result': typeof ResultIndexRoute
+  '/submission': typeof SubmissionIndexRoute
   '/questions/$id': typeof QuestionsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/result': typeof ResultIndexRoute
+  '/submission': typeof SubmissionIndexRoute
   '/questions/$id': typeof QuestionsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/result/': typeof ResultIndexRoute
+  '/submission/': typeof SubmissionIndexRoute
   '/questions/$id/': typeof QuestionsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/questions/$id'
+  fullPaths: '/' | '/result' | '/submission' | '/questions/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/questions/$id'
-  id: '__root__' | '/' | '/questions/$id/'
+  to: '/' | '/result' | '/submission' | '/questions/$id'
+  id: '__root__' | '/' | '/result/' | '/submission/' | '/questions/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ResultIndexRoute: typeof ResultIndexRoute
+  SubmissionIndexRoute: typeof SubmissionIndexRoute
   QuestionsIdIndexRoute: typeof QuestionsIdIndexRoute
 }
 
@@ -56,6 +76,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/submission/': {
+      id: '/submission/'
+      path: '/submission'
+      fullPath: '/submission'
+      preLoaderRoute: typeof SubmissionIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/result/': {
+      id: '/result/'
+      path: '/result'
+      fullPath: '/result'
+      preLoaderRoute: typeof ResultIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/questions/$id/': {
@@ -70,6 +104,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ResultIndexRoute: ResultIndexRoute,
+  SubmissionIndexRoute: SubmissionIndexRoute,
   QuestionsIdIndexRoute: QuestionsIdIndexRoute,
 }
 export const routeTree = rootRouteImport
