@@ -2,12 +2,8 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import Banner from '@/components/app/banner'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
-import { cn } from '@/lib/utils'
 import { useGetQuiz } from '../-apis'
 import { useQuery } from '@tanstack/react-query'
-import { CheckIcon } from 'lucide-react'
 import QuestionBackground from '@/components/app/question-background'
 import ProgressBar from '@/components/app/progress-bar'
 import QuestionTitle from '@/components/app/question-title'
@@ -18,43 +14,6 @@ export const Route = createFileRoute('/questions/$id/')({
   component: RouteComponent,
 })
 
-// Mock data - replace with actual API call
-const mockQuestions = [
-  {
-    id: 1,
-    question: 'What is your primary career goal?',
-    options: [
-      'Advance to a leadership position',
-      'Switch to a new industry',
-      'Start my own business',
-      'Enhance my current skills',
-    ],
-  },
-  {
-    id: 2,
-    question: 'How many years of work experience do you have?',
-    options: [
-      'Less than 2 years',
-      '2-5 years',
-      '5-10 years',
-      'More than 10 years',
-    ],
-  },
-  {
-    id: 3,
-    question: 'What is your preferred learning style?',
-    options: [
-      'Self-paced online courses',
-      'Live interactive sessions',
-      'Hybrid (mix of both)',
-      'In-person classes',
-    ],
-  },
-]
-
-// const totalQuestions = mockQuestions.length
-
-// Helper type for stored answers
 type QuizState = {
   currentQuestionIndex: number
   answers: Record<number, number> // questionId -> answerId
@@ -92,7 +51,6 @@ function RouteComponent() {
     }
   }, [id])
 
-  // Save state to local storage whenever it changes
   useEffect(() => {
     if (!id) return
     const state: QuizState = { currentQuestionIndex, answers }
@@ -122,9 +80,6 @@ function RouteComponent() {
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex((prev) => prev + 1)
     } else {
-      // Handle completion/submission here
-      // For now, confirm completion
-      // console.log('Quiz Completed', answers)
       alert('Quiz Completed! Submitting...') // Placeholder for actual submission
     }
   }
