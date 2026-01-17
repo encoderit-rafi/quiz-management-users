@@ -9,7 +9,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'rounded-md cursor-pointer text-lg font-medium w-fit px-8 py-6 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white duration-500 bg-transparent',
+          'rounded-md cursor-pointer text-lg font-medium w-fit px-8 py-6 border-(--secondary-color) text-(--secondary-color) hover:bg-(--secondary-color) hover:text-white duration-500 bg-transparent',
+        'primary-reverse':
+          'rounded-md cursor-pointer text-lg font-medium w-fit px-8 py-6 border-transparent hover:text-(--secondary-color) bg-(--secondary-color) text-white duration-500 hover:border-(--secondary-color) hover:bg-transparent ',
+
         default: 'bg-primary text-primary-foreground hover:bg-primary/80',
         outline:
           'border-border bg-input/30 hover:bg-input/50 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground',

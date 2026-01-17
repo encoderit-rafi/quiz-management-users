@@ -15,7 +15,7 @@ function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
-        className="[&>svg]:size-5 grid place-content-center text-purple-500"
+        className="[&>svg]:size-5 grid place-content-center text-(--primary-color)"
       >
         <CheckIcon />
       </CheckboxPrimitive.Indicator>

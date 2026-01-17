@@ -20,7 +20,7 @@ function RouteComponent() {
   const [activeQuizId, setActiveQuizId] = useState<number | null>(null)
   const { mutate: viewQuiz } = useQuizViewCount()
 
-  const { data: quizData, isLoading } = useQuery(useGetQuiz(activeQuizId!))
+  const { data: quiz, isLoading } = useQuery(useGetQuiz(activeQuizId!))
 
   useEffect(() => {
     const localQuizId = localStorage.getItem('quiz_id')
@@ -51,37 +51,41 @@ function RouteComponent() {
   return (
     <div
       className={`min-h-screen flex flex-col overflow-hidden bg-cover bg-center after:absolute after:inset-0 after:bg-linear-to-r after:from-black after:from-20% after:to-transparent text-white`}
-      style={{
-        backgroundImage: `url(${quizData?.background_image})`,
-      }}
+      style={
+        {
+          backgroundImage: `url(${quiz?.background_image})`,
+          '--primary-color': quiz?.primary_color,
+          '--secondary-color': quiz?.secondary_color,
+        } as React.CSSProperties
+      }
     >
       <div className="flex-1 flex flex-col overflow-hidden relative z-10">
         <nav className="bg-white/20 p-2 shrink-0 backdrop-blur-xs">
           <Banner
-            logo={quizData?.logo || ''}
-            title={quizData?.title || ''}
-            heading={quizData?.heading || ''}
+            logo={quiz?.logo || ''}
+            title={quiz?.title || ''}
+            heading={quiz?.heading || ''}
           />
         </nav>
         <div className="container grow  mx-auto p-2 flex flex-col">
           <div className="w-full max-w-lg flex flex-col gap-8 justify-center grow">
-            <h1 className="border-l-4 border-l-purple-500 p-2 text-4xl md:text-5xl font-bold ">
-              {quizData?.title || ''}
+            <h1 className="border-l-4 border-l-(--primary-color) p-2 text-4xl md:text-5xl font-bold ">
+              {quiz?.title || ''}
             </h1>
-            <p className="text-lg">{quizData?.description || ''}</p>
+            <p className="text-lg">{quiz?.description || ''}</p>
 
             <Button variant={'primary'} size={'lg'}>
               <Link
                 to="/questions/$id"
                 params={{ id: String(activeQuizId || 1) }}
               >
-                {quizData?.cta_text || 'Start Quiz'} »
+                {quiz?.cta_text || 'Start Quiz'} »
               </Link>
             </Button>
             <div
               className="prose"
               dangerouslySetInnerHTML={{
-                __html: quizData?.landing_page_text || '',
+                __html: quiz?.landing_page_text || '',
               }}
             />
           </div>
