@@ -5,7 +5,7 @@ export default function ProgressBar({
   index: number
   total: number
 }) {
-  const progress = (index / total) * 100
+  const progress = ((index + 1) / total) * 100
   return (
     <div className="">
       <div className="h-3 bg-gray-200 rounded-full overflow-hidden">

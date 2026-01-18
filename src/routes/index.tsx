@@ -1,10 +1,13 @@
 import Banner from '@/components/app/banner'
 import { Button } from '@/components/ui/button'
+import { useQuizStore } from '@/store/quiz.store'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { z } from 'zod'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useQuizViewCount, useGetQuiz } from './questions/-apis'
+import { useGetQuiz } from './_quiz/questions/-apis'
+import NotFound from '@/components/app/not-found'
+import { ChevronsRight } from 'lucide-react'
 
 const searchSchema = z.object({
   quiz_id: z.number().optional().catch(undefined),
@@ -17,37 +20,40 @@ export const Route = createFileRoute('/')({
 
 function RouteComponent() {
   const { quiz_id } = Route.useSearch()
-  const [activeQuizId, setActiveQuizId] = useState<number | null>(null)
-  const { mutate: viewQuiz } = useQuizViewCount()
+  const {
+    quizId: activeQuizId,
+    setQuizId: setActiveQuizId,
+    setQuiz,
+  } = useQuizStore()
 
-  const { data: quiz, isLoading } = useQuery(useGetQuiz(activeQuizId!))
+  const effectiveId = quiz_id ?? activeQuizId
+
+  const { data: quiz, isLoading } = useQuery(useGetQuiz(effectiveId ?? 0))
 
   useEffect(() => {
-    const localQuizId = localStorage.getItem('quiz_id')
-    const parsedLocalQuizId = localQuizId ? Number(localQuizId) : null
-
-    if (quiz_id) {
-      setActiveQuizId(quiz_id)
-      if (!parsedLocalQuizId || parsedLocalQuizId !== quiz_id) {
-        // Call view count API and update local storage
-        viewQuiz(quiz_id)
-        localStorage.setItem('quiz_id', String(quiz_id))
-      }
-    } else if (parsedLocalQuizId) {
-      setActiveQuizId(parsedLocalQuizId)
+    if (quiz) {
+      setQuiz(quiz)
     }
-  }, [quiz_id, viewQuiz])
+  }, [quiz, setQuiz])
 
-  if (!activeQuizId && !isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-2xl font-bold bg-gray-100">
-        No quiz found
-      </div>
-    )
-  }
+  useEffect(() => {
+    if (quiz_id && activeQuizId !== quiz_id) {
+      setActiveQuizId(quiz_id)
+    }
+  }, [quiz_id, activeQuizId, setActiveQuizId])
+
+  // if (!effectiveId) {
+  //   throw notFound()
+  // }
 
   if (isLoading) return <div>Loading...</div>
 
+  // if (!quiz) {
+  //   throw notFound()
+  // }
+  if (!effectiveId && !isLoading) {
+    return <NotFound />
+  }
   return (
     <div
       className={`min-h-screen flex flex-col overflow-hidden bg-cover bg-center after:absolute after:inset-0 after:bg-linear-to-r after:from-black after:from-20% after:to-transparent text-white`}
@@ -75,11 +81,8 @@ function RouteComponent() {
             <p className="text-lg">{quiz?.description || ''}</p>
 
             <Button variant={'primary'} size={'lg'}>
-              <Link
-                to="/questions/$id"
-                params={{ id: String(activeQuizId || 1) }}
-              >
-                {quiz?.cta_text || 'Start Quiz'} »
+              <Link to="/questions" className="flex items-center gap-2">
+                {quiz?.cta_text || 'Start Quiz'} <ChevronsRight />
               </Link>
             </Button>
             <div
