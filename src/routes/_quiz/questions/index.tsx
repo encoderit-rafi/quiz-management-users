@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 
 import ProgressBar from '@/components/app/progress-bar'
@@ -11,6 +11,7 @@ export const Route = createFileRoute('/_quiz/questions/')({
 })
 
 function RouteComponent() {
+  const navigate = useNavigate()
   const {
     quiz,
     currentQuestionIndex,
@@ -33,15 +34,11 @@ function RouteComponent() {
 
   const handleNext = () => {
     const selectedAnswerId = answers[currentQuestion.id]
-    if (!selectedAnswerId) {
-      // Maybe show a toast or alert if needed
-      return
-    }
+    if (!selectedAnswerId) return
 
     if (currentQuestionIndex === totalQuestions - 1) {
-      // Handle submission logic here or navigate to submission route
-      console.log('Submit Quiz', answers)
-      return
+      // console.log('Submit Quiz', answers)
+      return navigate({ to: '/result' })
     }
 
     nextQuestion()

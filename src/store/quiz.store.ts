@@ -7,13 +7,17 @@ interface QuizState {
   quiz: TQuizSchema | null
   currentQuestionIndex: number
   answers: Record<number, number> // questionId -> answerId
+  started_at: string | null
+  resultPageId: number | null
   setQuizId: (id: number | null) => void
   setQuiz: (quiz: TQuizSchema | null) => void
+  setResultPageId: (id: number | null) => void
   setCurrentQuestionIndex: (index: number) => void
   setAnswer: (questionId: number, answerId: number) => void
   nextQuestion: () => void
   prevQuestion: () => void
   resetProgress: () => void
+  getTotalMarks: () => number
 }
 
 export const useQuizStore = create<QuizState>()(
@@ -23,20 +27,35 @@ export const useQuizStore = create<QuizState>()(
       quiz: null,
       currentQuestionIndex: 0,
       answers: {},
+      started_at: null,
+      resultPageId: null,
       setQuizId: (id) =>
         set((state) => {
           if (state.quizId !== id) {
-            return { quizId: id, currentQuestionIndex: 0, answers: {} }
+            return {
+              quizId: id,
+              currentQuestionIndex: 0,
+              answers: {},
+              started_at: null,
+              resultPageId: null,
+            }
           }
           return { quizId: id }
         }),
       setQuiz: (quiz) =>
         set((state) => {
           if (state.quiz?.id !== quiz?.id) {
-            return { quiz, currentQuestionIndex: 0, answers: {} }
+            return {
+              quiz,
+              currentQuestionIndex: 0,
+              answers: {},
+              started_at: quiz ? new Date().toISOString() : null,
+              resultPageId: null,
+            }
           }
           return { quiz }
         }),
+      setResultPageId: (id) => set({ resultPageId: id }),
       setCurrentQuestionIndex: (index) => set({ currentQuestionIndex: index }),
       setAnswer: (questionId, answerId) =>
         set((state) => ({
@@ -56,6 +75,18 @@ export const useQuizStore = create<QuizState>()(
         }
       },
       resetProgress: () => set({ currentQuestionIndex: 0, answers: {} }),
+      getTotalMarks: () => {
+        const { quiz, answers } = get()
+        if (!quiz?.questions) return 0
+        return quiz.questions.reduce((acc, question) => {
+          const selectedAnswerId = answers[question.id]
+          if (!selectedAnswerId) return acc
+          const selectedAnswer = question.answers.find(
+            (a) => a.id === selectedAnswerId,
+          )
+          return acc + (selectedAnswer?.points || 0)
+        }, 0)
+      },
     }),
     {
       name: 'quiz-storage',
