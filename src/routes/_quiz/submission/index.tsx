@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useQuizStore } from '@/store/quiz.store'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,7 +15,7 @@ export const Route = createFileRoute('/_quiz/submission/')({
 })
 
 function RouteComponent() {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { quiz, answers, resultPageId, getTotalMarks } = useQuizStore()
   const { mutate: submitQuiz, isPending: isSubmitting } = useQuizSubmission()
 

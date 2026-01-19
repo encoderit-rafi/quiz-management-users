@@ -5,7 +5,8 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { z } from 'zod'
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useGetQuiz } from './_quiz/questions/-apis'
+import { useGetQuiz } from './_quiz/questions/-apis/use-get-quiz.api'
+import { useQuizViewCount } from './_quiz/questions/-apis/use-quiz-view-count.api'
 import NotFound from '@/components/app/not-found'
 import { ChevronsRight } from 'lucide-react'
 
@@ -28,8 +29,23 @@ function RouteComponent() {
   } = useQuizStore()
 
   const effectiveId = quiz_id ?? activeQuizId
+  const { mutate: addViewCount } = useQuizViewCount()
 
   const { data: quiz, isLoading } = useQuery(useGetQuiz(effectiveId ?? 0))
+
+  useEffect(() => {
+    const uuid = quiz?.uuid
+    if (uuid) {
+      const viewQuizzes = JSON.parse(localStorage.getItem('view_quiz') || '[]')
+      if (!viewQuizzes.includes(uuid)) {
+        addViewCount(uuid)
+        localStorage.setItem(
+          'view_quiz',
+          JSON.stringify([...viewQuizzes, uuid]),
+        )
+      }
+    }
+  }, [quiz?.uuid, addViewCount])
 
   useEffect(() => {
     if (quiz) {
