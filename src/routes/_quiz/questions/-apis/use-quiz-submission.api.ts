@@ -14,8 +14,14 @@ export type QuizSubmissionPayload = {
 
 export const useQuizSubmission = () => {
   return useMutation({
-    mutationFn: async (payload: QuizSubmissionPayload) => {
-      const res = await api.post('/quiz-submissions', payload)
+    mutationFn: async ({
+      uuid,
+      payload,
+    }: {
+      uuid: string
+      payload: QuizSubmissionPayload
+    }) => {
+      const res = await api.post(`/quiz/${uuid}/quiz-submissions`, payload)
       return res.data
     },
   })
