@@ -9,13 +9,19 @@ import { Input } from '@/components/ui/input'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { ChevronsRight, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useState } from 'react'
+import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/_quiz/submission/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  // const navigate = useNavigate()
+  const [message, setMessage] = useState<{ success: string; error: string }>({
+    success: '',
+    error: '',
+  })
+
   const { quiz, answers, resultPageId, getTotalMarks } = useQuizStore()
   const { mutate: submitQuiz, isPending: isSubmitting } = useQuizSubmission()
 
@@ -76,12 +82,17 @@ function RouteComponent() {
       { uuid: quiz.uuid, payload },
       {
         onSuccess: () => {
+          // navigate({ to: '/', search: { quiz_id: quiz.uuid } })
           toast.success('Successfully submitted!')
-          // navigate({ to: '/' })
+          setMessage({ success: 'Successfully submitted!', error: '' })
         },
         onError: (err: any) => {
           console.log('👉 ~ onSubmit ~ err:', err)
           toast.error(err?.response?.data?.message || 'Failed to submit quiz')
+          setMessage({
+            success: '',
+            error: err?.response?.data?.message || 'Failed to submit quiz',
+          })
         },
       },
     )
@@ -130,6 +141,16 @@ function RouteComponent() {
               )}
             </Field>
           ))}
+
+        <div
+          className={cn('text-center hidden', {
+            'text-green-500': Boolean(message.success),
+            'text-red-500': Boolean(message.error),
+            block: Boolean(message.success || message.error),
+          })}
+        >
+          {message.success || message.error}
+        </div>
 
         <Button
           type="submit"

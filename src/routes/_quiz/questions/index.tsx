@@ -5,6 +5,7 @@ import ProgressBar from '@/components/app/progress-bar'
 import QuestionTitle from '@/components/app/question-title'
 import AnswerCard from '@/components/app/answer-card'
 import { useQuizStore } from '@/store/quiz.store'
+import { ChevronsRight } from 'lucide-react'
 
 export const Route = createFileRoute('/_quiz/questions/')({
   component: RouteComponent,
@@ -82,12 +83,13 @@ function RouteComponent() {
         <Button
           variant="primary-reverse"
           size="lg"
-          className="w-full text-lg h-14"
+          className="w-full text-lg h-14 flex items-center gap-2"
           onClick={handleNext}
         >
           {currentQuestionIndex < totalQuestions - 1
             ? 'Next Question'
             : 'Submit Quiz'}
+          <ChevronsRight />
         </Button>
 
         {currentQuestionIndex > 0 && (
