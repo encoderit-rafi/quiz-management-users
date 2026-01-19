@@ -78,10 +78,11 @@ function RouteComponent() {
     <div className="mx-auto my-10 max-w-lg">
       <div className="mb-8 text-center">
         <h1 className="text-2xl font-bold text-(--secondary-color)">
-          Almost done!
+          That's all the questions!
         </h1>
         <p className="text-gray-500">
-          Please fill in your details to get your result.
+          Please provide your details to access your personal result. We'll also
+          email you a link.
         </p>
       </div>
 
