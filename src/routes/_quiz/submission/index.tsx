@@ -52,6 +52,7 @@ function RouteComponent() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(schema),
   })
@@ -85,6 +86,7 @@ function RouteComponent() {
           // navigate({ to: '/', search: { quiz_id: quiz.uuid } })
           toast.success('Successfully submitted!')
           setMessage({ success: 'Successfully submitted!', error: '' })
+          reset()
         },
         onError: (err: any) => {
           console.log('👉 ~ onSubmit ~ err:', err)
