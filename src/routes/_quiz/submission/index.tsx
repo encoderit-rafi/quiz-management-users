@@ -56,10 +56,13 @@ function RouteComponent() {
 
   const onSubmit = (data: any) => {
     const total_score = getTotalMarks()
-    const formattedAnswers = Object.entries(answers).map(([qId, aId]) => ({
-      question_id: Number(qId),
-      answer_ids: [aId],
-    }))
+    const formattedAnswers = Object.entries(answers).map(([qId, aIds]) => {
+      const normalizedAIds = Array.isArray(aIds) ? aIds : [aIds]
+      return {
+        question_id: Number(qId),
+        answer_ids: normalizedAIds,
+      }
+    })
 
     const payload = {
       quiz_id: quiz.id,

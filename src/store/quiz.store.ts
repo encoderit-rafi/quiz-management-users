@@ -3,17 +3,21 @@ import { persist } from 'zustand/middleware'
 import { TQuizSchema } from '@/routes/_quiz/questions/-types'
 
 interface QuizState {
-  quizId: number | null
+  quizId: string | number | null
   quiz: TQuizSchema | null
   currentQuestionIndex: number
-  answers: Record<number, number> // questionId -> answerId
+  answers: Record<number, number[]> // questionId -> answerIds[]
   started_at: string | null
   resultPageId: number | null
-  setQuizId: (id: string | number | null) => void
+  setQuizId: (id: string | number | null | undefined) => void
   setQuiz: (quiz: TQuizSchema | null) => void
   setResultPageId: (id: number | null) => void
   setCurrentQuestionIndex: (index: number) => void
-  setAnswer: (questionId: number, answerId: number) => void
+  setAnswer: (
+    questionId: number,
+    answerId: number,
+    multiselect?: boolean,
+  ) => void
   nextQuestion: () => void
   prevQuestion: () => void
   resetProgress: () => void
@@ -31,16 +35,18 @@ export const useQuizStore = create<QuizState>()(
       resultPageId: null,
       setQuizId: (id) =>
         set((state) => {
-          if (state.quizId !== id) {
+          const normalizedId =
+            typeof id === 'string' ? Number(id) : id === undefined ? null : id
+          if (state.quizId !== normalizedId) {
             return {
-              quizId: id,
+              quizId: normalizedId,
               currentQuestionIndex: 0,
               answers: {},
               started_at: null,
               resultPageId: null,
             }
           }
-          return { quizId: id }
+          return { quizId: normalizedId }
         }),
       setQuiz: (quiz) =>
         set((state) => {
@@ -57,10 +63,30 @@ export const useQuizStore = create<QuizState>()(
         }),
       setResultPageId: (id) => set({ resultPageId: id }),
       setCurrentQuestionIndex: (index) => set({ currentQuestionIndex: index }),
-      setAnswer: (questionId, answerId) =>
-        set((state) => ({
-          answers: { ...state.answers, [questionId]: answerId },
-        })),
+      setAnswer: (questionId, answerId, multiselect = false) =>
+        set((state) => {
+          const storedValue = state.answers[questionId]
+          const currentAnswers = Array.isArray(storedValue)
+            ? storedValue
+            : storedValue != null
+              ? [storedValue]
+              : []
+          let newAnswers: number[]
+
+          if (multiselect) {
+            if (currentAnswers.includes(answerId)) {
+              newAnswers = currentAnswers.filter((id) => id !== answerId)
+            } else {
+              newAnswers = [...currentAnswers, answerId]
+            }
+          } else {
+            newAnswers = [answerId]
+          }
+
+          return {
+            answers: { ...state.answers, [questionId]: newAnswers },
+          }
+        }),
       nextQuestion: () => {
         const { currentQuestionIndex, quiz } = get()
         const totalQuestions = quiz?.questions?.length || 0
@@ -79,12 +105,21 @@ export const useQuizStore = create<QuizState>()(
         const { quiz, answers } = get()
         if (!quiz?.questions) return 0
         return quiz.questions.reduce((acc, question) => {
-          const selectedAnswerId = answers[question.id]
-          if (!selectedAnswerId) return acc
-          const selectedAnswer = question.answers.find(
-            (a) => a.id === selectedAnswerId,
-          )
-          return acc + (selectedAnswer?.points || 0)
+          const selectedValue = answers[question.id]
+          const selectedAnswerIds = Array.isArray(selectedValue)
+            ? selectedValue
+            : selectedValue != null
+              ? [selectedValue]
+              : []
+
+          if (selectedAnswerIds.length === 0) return acc
+
+          const questionPoints = selectedAnswerIds.reduce((sum, id) => {
+            const answer = question.answers.find((a) => a.id === id)
+            return sum + (answer?.points || 0)
+          }, 0)
+
+          return acc + questionPoints
         }, 0)
       },
     }),

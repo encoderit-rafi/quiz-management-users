@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_quiz')({
 })
 
 function RouteComponent() {
-  const { quiz, quizId, currentQuestionIndex } = useQuizStore()
+  const { quiz, currentQuestionIndex } = useQuizStore()
   const {
     primary_color,
     secondary_color,
@@ -20,7 +20,7 @@ function RouteComponent() {
     title = '',
     heading = '',
   } = quiz ?? {}
-  if (!quizId) {
+  if (!Boolean(quiz?.uuid)) {
     return <NotFound />
   }
   return (

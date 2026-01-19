@@ -29,12 +29,18 @@ function RouteComponent() {
   if (!currentQuestion) return null
 
   const handleAnswerSelect = (questionId: number, answerId: number) => {
-    setAnswer(questionId, answerId)
+    setAnswer(questionId, answerId, currentQuestion.multiselect)
   }
 
   const handleNext = () => {
-    const selectedAnswerId = answers[currentQuestion.id]
-    if (!selectedAnswerId) return
+    const selectedValue = answers[currentQuestion.id]
+    const selectedAnswerIds = Array.isArray(selectedValue)
+      ? selectedValue
+      : selectedValue != null
+        ? [selectedValue]
+        : []
+
+    if (selectedAnswerIds.length === 0) return
 
     if (currentQuestionIndex === totalQuestions - 1) {
       // console.log('Submit Quiz', answers)
@@ -48,8 +54,6 @@ function RouteComponent() {
     prevQuestion()
   }
 
-  const selectedAnswerId = answers[currentQuestion.id]
-
   return (
     <div className="mx-auto my-10 max-w-[80%]">
       <ProgressBar index={currentQuestionIndex} total={totalQuestions} />
@@ -58,7 +62,10 @@ function RouteComponent() {
 
       <div className="flex flex-col space-y-3">
         {currentQuestion.answers.map((answer, index) => {
-          const isSelected = selectedAnswerId === answer.id
+          const selectedValue = answers[currentQuestion.id]
+          const isSelected = Array.isArray(selectedValue)
+            ? selectedValue.includes(answer.id)
+            : selectedValue === answer.id
           return (
             <AnswerCard
               key={answer.id}

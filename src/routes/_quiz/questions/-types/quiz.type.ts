@@ -16,7 +16,7 @@ export const QuestionSchema = z.object({
   question_text: z.string(),
   image: z.string().url().nullable(),
   order: z.number(),
-  is_active: z.boolean(),
+  multiselect: z.boolean(),
   answers: z.array(AnswerSchema),
 })
 
