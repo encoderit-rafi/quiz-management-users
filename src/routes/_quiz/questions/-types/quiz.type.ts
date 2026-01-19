@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 // Answer Schema
 export const AnswerSchema = z.object({
@@ -7,7 +7,7 @@ export const AnswerSchema = z.object({
   answer_text: z.string(),
   points: z.number(),
   order: z.number(),
-});
+})
 
 // Question Schema
 export const QuestionSchema = z.object({
@@ -18,7 +18,7 @@ export const QuestionSchema = z.object({
   order: z.number(),
   is_active: z.boolean(),
   answers: z.array(AnswerSchema),
-});
+})
 
 // Result Page Schema
 export const ResultPageSchema = z.object({
@@ -30,23 +30,24 @@ export const ResultPageSchema = z.object({
   min_score: z.number(),
   max_score: z.number(),
   order: z.number(),
-});
+})
 
 // Lead Form Field Schema
 export const LeadFormFieldSchema = z.object({
   type: z.string(),
   label: z.string(),
   required: z.boolean(),
+  enabled: z.boolean(),
   field_name: z.string(),
-  options: z.array(z.string()).optional(),
-});
+  // options: z.array(z.string()).optional(),
+})
 
 // Lead Form Setting Schema
 export const LeadFormSettingSchema = z.object({
   id: z.number(),
   quiz_id: z.number(),
   fields: z.array(LeadFormFieldSchema),
-});
+})
 
 // Result Delivery Setting Schema
 export const ResultDeliverySettingSchema = z.object({
@@ -57,7 +58,7 @@ export const ResultDeliverySettingSchema = z.object({
   enable_link_share: z.boolean(),
   email_subject: z.string().nullable(),
   email_body: z.string().nullable(),
-});
+})
 
 // Quiz Schema
 export const QuizSchema = z.object({
@@ -89,15 +90,13 @@ export const QuizSchema = z.object({
   resultPages: z.array(ResultPageSchema).optional(),
   leadFormSetting: LeadFormSettingSchema.nullable().optional(),
   resultDeliverySetting: ResultDeliverySettingSchema.nullable().optional(),
-});
+})
 
 // Type inference
-export type TQuizSchema = z.infer<typeof QuizSchema>;
-export type TQuestionSchema = z.infer<typeof QuestionSchema>;
-export type TAnswerSchema = z.infer<typeof AnswerSchema>;
-export type TResultPageSchema = z.infer<typeof ResultPageSchema>;
-export type TLeadFormField = z.infer<typeof LeadFormFieldSchema>;
-export type TLeadFormSetting = z.infer<typeof LeadFormSettingSchema>;
-export type TResultDeliverySetting = z.infer<
-  typeof ResultDeliverySettingSchema
->;
+export type TQuizSchema = z.infer<typeof QuizSchema>
+export type TQuestionSchema = z.infer<typeof QuestionSchema>
+export type TAnswerSchema = z.infer<typeof AnswerSchema>
+export type TResultPageSchema = z.infer<typeof ResultPageSchema>
+export type TLeadFormField = z.infer<typeof LeadFormFieldSchema>
+export type TLeadFormSetting = z.infer<typeof LeadFormSettingSchema>
+export type TResultDeliverySetting = z.infer<typeof ResultDeliverySettingSchema>

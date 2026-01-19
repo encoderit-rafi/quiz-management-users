@@ -77,9 +77,7 @@ function RouteComponent() {
   return (
     <div className="mx-auto my-10 max-w-lg">
       <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold text-(--secondary-color)">
-          That's all the questions!
-        </h1>
+        <h1 className="text-2xl font-bold">That's all the questions!</h1>
         <p className="text-gray-500">
           Please provide your details to access your personal result. We'll also
           email you a link.
@@ -87,22 +85,25 @@ function RouteComponent() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {leadFields.map((field) => (
-          <Field key={field.field_name}>
-            <FieldLabel htmlFor={field.field_name}>{field.label}</FieldLabel>
-            <Input
-              id={field.field_name}
-              type={field.type}
-              placeholder={`Enter your ${field.label.toLowerCase()}`}
-              {...register(field.field_name)}
-            />
-            {errors[field.field_name] && (
-              <FieldError>
-                {String(errors[field.field_name]?.message)}
-              </FieldError>
-            )}
-          </Field>
-        ))}
+        {leadFields
+          .filter((field) => field.enabled)
+          .map((field) => (
+            <Field key={field.field_name}>
+              <FieldLabel htmlFor={field.field_name}>{field.label}</FieldLabel>
+              <Input
+                id={field.field_name}
+                type={field.type}
+                className="bg-(--primary-color)/10 border-(--primary-color)/20 rounded-sm h-12 focus-visible:ring-(--primary-color)/30 focus-visible:border-(--primary-color)/20"
+                placeholder={`Enter your ${field.label.toLowerCase()}`}
+                {...register(field.field_name)}
+              />
+              {errors[field.field_name] && (
+                <FieldError>
+                  {String(errors[field.field_name]?.message)}
+                </FieldError>
+              )}
+            </Field>
+          ))}
 
         <Button
           type="submit"
