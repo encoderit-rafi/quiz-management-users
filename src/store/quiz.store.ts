@@ -9,7 +9,7 @@ interface QuizState {
   answers: Record<number, number> // questionId -> answerId
   started_at: string | null
   resultPageId: number | null
-  setQuizId: (id: number | null) => void
+  setQuizId: (id: string | number | null) => void
   setQuiz: (quiz: TQuizSchema | null) => void
   setResultPageId: (id: number | null) => void
   setCurrentQuestionIndex: (index: number) => void

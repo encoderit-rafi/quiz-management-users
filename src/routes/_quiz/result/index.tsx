@@ -10,15 +10,17 @@ export const Route = createFileRoute('/_quiz/result/')({
 })
 
 function RouteComponent() {
-  const { quiz, getTotalMarks, setResultPageId } = useQuizStore()
+  const { quizId, getTotalMarks, setResultPageId } = useQuizStore()
+  const totalMarks = getTotalMarks()
+
   const {
-    mutate: getResultPage,
     data: resultData,
     isPending,
-    isError,
-  } = useGetResultPage()
-
-  const totalMarks = getTotalMarks()
+    // isError,
+  } = useGetResultPage({
+    quiz_id: quizId!,
+    mark: totalMarks,
+  })
 
   useEffect(() => {
     if (resultData) {
@@ -28,18 +30,6 @@ function RouteComponent() {
       }
     }
   }, [resultData, setResultPageId])
-
-  useEffect(() => {
-    if (quiz?.id && !resultData) {
-      getResultPage({
-        quiz_id: quiz.id,
-        data: {
-          quiz_id: quiz.id,
-          mark: totalMarks,
-        },
-      })
-    }
-  }, [])
 
   if (isPending) {
     return (

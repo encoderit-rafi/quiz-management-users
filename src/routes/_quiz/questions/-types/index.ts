@@ -1,4 +1,2 @@
-export * from "./quiz.type";
-export * from "./form-quiz.type";
-export * from "./search.type";
-export * from "../quizzes/$id/questions/-types/form-quiz-question.type";
+export * from './quiz.type'
+export * from './search.type'

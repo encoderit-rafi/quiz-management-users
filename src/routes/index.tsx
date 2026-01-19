@@ -10,7 +10,7 @@ import NotFound from '@/components/app/not-found'
 import { ChevronsRight } from 'lucide-react'
 
 const searchSchema = z.object({
-  quiz_id: z.number().optional().catch(undefined),
+  quiz_id: z.union([z.string(), z.number()]).optional().catch(undefined),
 })
 
 export const Route = createFileRoute('/')({
@@ -20,6 +20,7 @@ export const Route = createFileRoute('/')({
 
 function RouteComponent() {
   const { quiz_id } = Route.useSearch()
+  console.log('👉 ~ RouteComponent ~ quiz_id:', quiz_id)
   const {
     quizId: activeQuizId,
     setQuizId: setActiveQuizId,

@@ -1,16 +1,21 @@
 import { api } from '@/axios'
-import { useMutation } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
+import { QUERY_KEYS } from '@/query-keys'
 
 export type GetResultPagePayload = {
-  quiz_id: number | string
-  data: Record<string, any>
+  quiz_id: string | number
+  mark: number
 }
 
-export const useGetResultPage = () => {
-  return useMutation({
-    mutationFn: async ({ quiz_id, data }: GetResultPagePayload) => {
-      const res = await api.post(`/quiz/${quiz_id}/result`, data)
+export const useGetResultPage = ({ quiz_id, mark }: GetResultPagePayload) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.GET_RESULT_PAGE(quiz_id, mark),
+    queryFn: async () => {
+      const res = await api.get(`/quiz/${quiz_id}/result`, {
+        params: { mark },
+      })
       return res.data
     },
+    enabled: !!quiz_id && mark !== undefined,
   })
 }

@@ -9,12 +9,12 @@ export const api = axios.create({
 })
 
 // Attach token automatically
-api.interceptors.request.use((config) => {
-  // const { token } = useToken.getState()
+// api.interceptors.request.use((config) => {
+//   // const { token } = useToken.getState()
 
-  config.headers.Authorization = `Bearer ${'19|Xmy5pqBjCiX9AFZV6uegnm5C0920FondAkMLldLMf2a5b6fd'}`
-  return config
-})
+//   config.headers.Authorization = `Bearer ${'19|Xmy5pqBjCiX9AFZV6uegnm5C0920FondAkMLldLMf2a5b6fd'}`
+//   return config
+// })
 
 // api.interceptors.response.use(
 //   (response) => response,
