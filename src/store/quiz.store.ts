@@ -91,12 +91,14 @@ export const useQuizStore = create<QuizState>()(
         const { currentQuestionIndex, quiz } = get()
         const totalQuestions = quiz?.questions?.length || 0
         if (currentQuestionIndex < totalQuestions - 1) {
+          console.log('👉 ~ nextQuestion ~ index:', currentQuestionIndex + 1)
           set({ currentQuestionIndex: currentQuestionIndex + 1 })
         }
       },
       prevQuestion: () => {
         const { currentQuestionIndex } = get()
         if (currentQuestionIndex > 0) {
+          console.log('👉 ~ prevQuestion ~ index:', currentQuestionIndex - 1)
           set({ currentQuestionIndex: currentQuestionIndex - 1 })
         }
       },

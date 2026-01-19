@@ -23,6 +23,7 @@ function RouteComponent() {
   if (!Boolean(quiz?.uuid)) {
     return <NotFound />
   }
+  console.log('👉 ~ Question Image:', questions[currentQuestionIndex]?.image)
   return (
     <div
       className="relative min-h-screen"
@@ -34,6 +35,7 @@ function RouteComponent() {
       }
     >
       <QuestionBackground
+        key={currentQuestionIndex}
         img_src={questions[currentQuestionIndex]?.image || ''}
       />
       {/* CONTENT */}
