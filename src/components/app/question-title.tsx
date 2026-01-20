@@ -10,7 +10,7 @@ export default function QuestionTitle({
   return (
     <h1
       className={cn(
-        'text-center font-bold text-2xl md:text-4xl px-5 my-4 md:my-8 text-gray-800',
+        'text-center font-bold text-2xl md:text-4xl px-5 my-4 md:my-5 text-gray-800',
         className,
       )}
     >

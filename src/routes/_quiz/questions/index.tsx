@@ -60,6 +60,10 @@ function RouteComponent() {
       <ProgressBar index={currentQuestionIndex} total={totalQuestions} />
 
       <QuestionTitle question={currentQuestion.question_text} />
+      <div className="hidden md:block text-lg font-semibold rounded-full bg-(--secondary-color)/20 text-(--secondary-color) py-2 px-10 my-5 w-fit text-center mx-auto">
+        {currentQuestion.multiselect ? 'Multiple Select' : 'Select'} 1 -{' '}
+        {currentQuestion?.answers?.length} Options
+      </div>
 
       <div className="flex flex-col space-y-3">
         {currentQuestion.answers.map((answer, index) => {
@@ -86,9 +90,13 @@ function RouteComponent() {
           className="w-full text-lg h-14 flex items-center gap-2"
           onClick={handleNext}
         >
-          {currentQuestionIndex < totalQuestions - 1
-            ? 'Next Question'
-            : 'Submit Quiz'}
+          {currentQuestionIndex < totalQuestions - 1 ? (
+            <span>
+              ({currentQuestionIndex + 1} - {totalQuestions}) Next Question
+            </span>
+          ) : (
+            'Submit Quiz'
+          )}
           <ChevronsRight />
         </Button>
 
