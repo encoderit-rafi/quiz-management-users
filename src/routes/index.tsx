@@ -9,6 +9,7 @@ import { useGetQuiz } from './_quiz/questions/-apis/use-get-quiz.api'
 import { useQuizViewCount } from './_quiz/questions/-apis/use-quiz-view-count.api'
 import NotFound from '@/components/app/not-found'
 import { ChevronsRight, Loader2 } from 'lucide-react'
+import { usePreloadImage } from '@/hooks/use-preload-image'
 
 const searchSchema = z.object({
   quiz_id: z.union([z.string(), z.number()]).optional().catch(undefined),
@@ -32,6 +33,9 @@ function RouteComponent() {
   const { mutate: addViewCount } = useQuizViewCount()
 
   const { data: quiz, isLoading } = useQuery(useGetQuiz(effectiveId ?? 0))
+  const { isLoaded: isImageLoaded } = usePreloadImage(
+    quiz?.background_image ?? undefined,
+  )
 
   useEffect(() => {
     const uuid = quiz?.uuid
@@ -63,7 +67,7 @@ function RouteComponent() {
   //   throw notFound()
   // }
 
-  if (isLoading)
+  if (isLoading || (quiz?.background_image && !isImageLoaded))
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-50 text-center">
         <Loader2 className=" h-5 w-5 animate-spin" />

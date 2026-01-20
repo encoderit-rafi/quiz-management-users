@@ -4,6 +4,8 @@ import QuestionBackground from '@/components/app/question-background'
 import QuestionCard from '@/components/app/question-card'
 import { useQuizStore } from '@/store/quiz.store'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { usePreloadImage } from '@/hooks/use-preload-image'
+import { Loader2 } from 'lucide-react'
 // import { useEffect } from 'react'
 
 export const Route = createFileRoute('/_quiz')({
@@ -20,6 +22,12 @@ function RouteComponent() {
     title = '',
     heading = '',
   } = quiz ?? {}
+
+  const currentQuestionImage =
+    questions[currentQuestionIndex]?.image ?? undefined
+  const { isLoaded: isQuestionImageLoaded } =
+    usePreloadImage(currentQuestionImage)
+
   if (!Boolean(quiz?.uuid)) {
     return <NotFound />
   }
@@ -39,6 +47,11 @@ function RouteComponent() {
         img_src={questions[currentQuestionIndex]?.image || ''}
       />
       {/* CONTENT */}
+      {!isQuestionImageLoaded && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/50 backdrop-blur-sm">
+          <Loader2 className="h-10 w-10 animate-spin text-(--primary-color)" />
+        </div>
+      )}
       <div className="relative py-[20vh] z-10 px-2">
         <QuestionCard>
           <div className="bg-(--primary-color)/10 py-3 border-b border-(--primary-color)/20">
