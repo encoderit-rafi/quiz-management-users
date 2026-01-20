@@ -56,7 +56,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="mx-auto my-10 max-w-[80%]">
+    <div className="p-3">
       <ProgressBar index={currentQuestionIndex} total={totalQuestions} />
 
       <QuestionTitle question={currentQuestion.question_text} />

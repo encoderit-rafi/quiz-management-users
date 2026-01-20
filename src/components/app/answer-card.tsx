@@ -21,7 +21,7 @@ export default function AnswerCard({
       )}
       {...props}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <div
           className={cn(
             'rounded-full size-8 md:size-10 flex items-center justify-center shrink-0 transition-colors',
