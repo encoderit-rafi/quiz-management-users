@@ -29,23 +29,44 @@ function RouteComponent() {
   console.log('👉 ~ RouteComponent ~ leadFields:', quiz)
 
   // Build dynamic Zod schema
-  const schemaShape: Record<string, z.ZodTypeAny> = {
-    name: z.string().min(1, 'Name is required'),
-  }
+  const schemaShape: Record<string, z.ZodTypeAny> = {}
+
   leadFields.forEach((field) => {
-    if (field.field_name === 'name') return
-    let fieldSchema: any = z.string()
-    if (field.required) {
-      fieldSchema = fieldSchema.min(1, `${field.label} is required`)
+    let fieldSchema: z.ZodTypeAny = z.string()
+
+    const isRequired = field.enabled && field.required
+
+    if (isRequired) {
+      fieldSchema = (fieldSchema as z.ZodString).min(
+        1,
+        `${field.label} is required`,
+      )
     } else {
       fieldSchema = fieldSchema.optional().or(z.literal(''))
     }
 
     if (field.type === 'email') {
-      fieldSchema = fieldSchema.email('Invalid email address')
+      // For email, if it's optional, we only validate the format if it's not empty
+      if (isRequired) {
+        fieldSchema = (fieldSchema as z.ZodString).email(
+          'Invalid email address',
+        )
+      } else {
+        fieldSchema = z.union([
+          z.string().email('Invalid email address'),
+          z.literal(''),
+          z.string().length(0).optional(),
+        ])
+      }
     }
     schemaShape[field.field_name] = fieldSchema
   })
+
+  // Ensure 'name' is at least defined if it wasn't in leadFields
+  if (!schemaShape.name) {
+    schemaShape.name = z.string().min(1, 'Name is required')
+  }
+
   const schema = z.object(schemaShape)
 
   const {
@@ -112,18 +133,21 @@ function RouteComponent() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <Field>
-          <FieldLabel htmlFor="name">Name</FieldLabel>
-          <Input
-            id="name"
-            placeholder="Enter your name"
-            className="bg-(--primary-color)/10 border-(--primary-color)/20 rounded-sm h-12 focus-visible:ring-(--primary-color)/30 focus-visible:border-(--primary-color)/20"
-            {...register('name')}
-          />
-          {errors.name && (
-            <FieldError>{String(errors.name?.message)}</FieldError>
-          )}
-        </Field>
+        {(leadFields.find((f) => f.field_name === 'name')?.enabled !== false ||
+          !leadFields.find((f) => f.field_name === 'name')) && (
+          <Field>
+            <FieldLabel htmlFor="name">Name</FieldLabel>
+            <Input
+              id="name"
+              placeholder="Enter your name"
+              className="bg-(--primary-color)/10 border-(--primary-color)/20 rounded-sm h-12 focus-visible:ring-(--primary-color)/30 focus-visible:border-(--primary-color)/20"
+              {...register('name')}
+            />
+            {errors.name && (
+              <FieldError>{String(errors.name?.message)}</FieldError>
+            )}
+          </Field>
+        )}
 
         {leadFields
           .filter((field) => field.enabled && field.field_name !== 'name')
