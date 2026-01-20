@@ -56,6 +56,7 @@ function RouteComponent() {
   } = useForm({
     resolver: zodResolver(schema),
   })
+  console.log('👉 ~ RouteComponent ~ errors:', errors)
 
   if (!quiz) {
     return <div>No quiz found</div>

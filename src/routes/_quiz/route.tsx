@@ -52,6 +52,7 @@ function RouteComponent() {
           <Loader2 className="h-10 w-10 animate-spin text-(--primary-color)" />
         </div>
       )}
+      {/* <div className="relative pt-[20vh] pb-[5vh] z-10 px-2"> */}
       <div className="relative pt-[20vh] pb-[5vh] z-10 px-2">
         <QuestionCard>
           <div className="bg-(--primary-color)/10 py-3 border-b border-(--primary-color)/20">

@@ -1,6 +1,6 @@
 export default function QuestionBackground({ img_src }: { img_src: string }) {
   return (
-    <div className="absolute inset-0 z-0 flex flex-col ">
+    <div className="absolute inset-0 z-0 flex flex-col">
       <img
         src={img_src || ''}
         className="w-full max-h-[50vh] object-center object-cover border-b-8 border-(--primary-color) shrink-0"
