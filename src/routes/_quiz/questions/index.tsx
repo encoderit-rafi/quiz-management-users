@@ -6,6 +6,7 @@ import QuestionTitle from '@/components/app/question-title'
 import AnswerCard from '@/components/app/answer-card'
 import { useQuizStore } from '@/store/quiz.store'
 import { ChevronsRight } from 'lucide-react'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_quiz/questions/')({
   component: RouteComponent,
@@ -41,7 +42,10 @@ function RouteComponent() {
         ? [selectedValue]
         : []
 
-    if (selectedAnswerIds.length === 0) return
+    if (selectedAnswerIds.length === 0) {
+      toast.error('Please select an answer to continue')
+      return
+    }
 
     if (currentQuestionIndex === totalQuestions - 1) {
       // console.log('Submit Quiz', answers)
