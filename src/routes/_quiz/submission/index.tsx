@@ -123,7 +123,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="mx-auto my-10 max-w-lg">
+    <div className="mx-auto my-10 max-w-xl">
       <div className="mb-8 text-center">
         <h1 className="text-2xl font-bold">That's all the questions!</h1>
         <p className="text-gray-500">
