@@ -41,7 +41,7 @@ function RouteComponent() {
       {/* CONTENT */}
       <div className="relative py-[20vh] z-10 px-2">
         <QuestionCard>
-          <div className="bg-(--primary-color)/10 py-6 border-b border-(--primary-color)/20">
+          <div className="bg-(--primary-color)/10 py-3 border-b border-(--primary-color)/20">
             <Banner logo={logo || ''} title={title} heading={heading} />
           </div>
           <Outlet />

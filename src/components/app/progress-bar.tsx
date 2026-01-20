@@ -15,7 +15,7 @@ export default function ProgressBar({
         />
       </div>
       <div className="flex items-center justify-between my-2 text-sm text-gray-500">
-        <span className="font-medium">
+        <span className="font-medium text-gray-900">
           Question {index + 1} of {total}
         </span>
         <span>Finish</span>
