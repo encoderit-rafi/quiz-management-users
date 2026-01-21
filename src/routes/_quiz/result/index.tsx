@@ -1,9 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuizStore } from '@/store/quiz.store'
 import { useGetResultPage } from '../questions/-apis/use-get-result-page.api'
 // import { useEffect } from 'react'
-import { ChevronsRight, Download, Loader2, Send } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ChevronsRight, Download, Loader2 } from 'lucide-react'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { jsPDF } from 'jspdf'
+import html2canvas from 'html2canvas'
+import { useState } from 'react'
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -19,6 +22,7 @@ export const Route = createFileRoute('/_quiz/result/')({
 
 function RouteComponent() {
   const { quiz, getTotalMarks } = useQuizStore()
+  const [isDownloading, setIsDownloading] = useState(false)
   const totalMarks = getTotalMarks()
   const {
     data: resultData,
@@ -29,6 +33,93 @@ function RouteComponent() {
     mark: totalMarks,
   })
   console.log('👉 ~ RouteComponent ~ resultData:', resultData)
+
+  const handleDownloadPDF = async () => {
+    console.log('🚀 Starting PDF download...')
+    const element = document.getElementById('result-content')
+    if (!element) {
+      console.error('❌ Element not found')
+      return
+    }
+
+    setIsDownloading(true)
+    try {
+      console.log('📸 Capturing with html2canvas...')
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          console.log('🧬 Processing cloned document...')
+
+          // Remove ALL style and link tags
+          const styleTags = clonedDoc.querySelectorAll('style')
+          console.log(`Found ${styleTags.length} style tags`)
+          styleTags.forEach((tag) => tag.remove())
+
+          const linkTags = clonedDoc.querySelectorAll('link[rel="stylesheet"]')
+          console.log(`Found ${linkTags.length} link tags`)
+          linkTags.forEach((tag) => tag.remove())
+
+          // Get the cloned element
+          const clonedElement = clonedDoc.getElementById('result-content')
+          if (clonedElement) {
+            console.log('✅ Found cloned element')
+            clonedElement.style.pointerEvents = 'auto'
+            clonedElement.classList.remove('pointer-events-none')
+            clonedElement.style.padding = '20px'
+            clonedElement.style.backgroundColor = '#ffffff'
+            clonedElement.style.color = '#000000'
+            clonedElement.style.fontFamily = 'Arial, sans-serif'
+            clonedElement.style.lineHeight = '1.6'
+
+            // Apply safe styles to all child elements
+            const allElements = clonedElement.querySelectorAll('*')
+            console.log(`Processing ${allElements.length} elements`)
+            allElements.forEach((el) => {
+              const htmlEl = el as HTMLElement
+              // Clear all existing styles
+              htmlEl.removeAttribute('class')
+              htmlEl.style.color = '#000000'
+              htmlEl.style.backgroundColor = 'transparent'
+              htmlEl.style.borderColor = '#dddddd'
+
+              // Apply basic typography
+              if (htmlEl.tagName === 'H1') htmlEl.style.fontSize = '24px'
+              if (htmlEl.tagName === 'H2') htmlEl.style.fontSize = '20px'
+              if (htmlEl.tagName === 'H3') htmlEl.style.fontSize = '18px'
+              if (htmlEl.tagName === 'P') htmlEl.style.marginBottom = '10px'
+              if (htmlEl.tagName === 'TABLE') {
+                htmlEl.style.borderCollapse = 'collapse'
+                htmlEl.style.width = '100%'
+              }
+              if (htmlEl.tagName === 'TH' || htmlEl.tagName === 'TD') {
+                htmlEl.style.border = '1px solid #dddddd'
+                htmlEl.style.padding = '8px'
+              }
+            })
+            console.log('✅ Styles applied')
+          }
+        },
+      })
+
+      console.log('📄 Canvas created, generating PDF...')
+      const imgData = canvas.toDataURL('image/png')
+      const imgWidth = 210 // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
+      pdf.save(`quiz-result-${quiz?.title || 'download'}.pdf`)
+      console.log('✅ PDF saved successfully!')
+    } catch (error) {
+      console.error('❌ PDF generation failed:', error)
+      alert('Failed to generate PDF. Please check the console for details.')
+    } finally {
+      setIsDownloading(false)
+    }
+  }
 
   // useEffect(() => {
   //   if (resultData) {
@@ -66,6 +157,7 @@ function RouteComponent() {
   return (
     <div className="mx-auto my-10 max-w-2xl px-4">
       <div
+        id="result-content"
         className="pointer-events-none prose prose-slate prose-custom max-w-none prose-headings:text-(--secondary-color) mb-10 prose-table:border prose-table:border-(--primary-color)/20 prose-th:border prose-th:border-(--primary-color)/20 prose-th:p-4 prose-td:border prose-td:border-(--primary-color)/20 prose-td:p-4"
         dangerouslySetInnerHTML={{
           __html: result?.content || '',
@@ -94,33 +186,38 @@ function RouteComponent() {
             </>
           )}
           {quiz?.resultDeliverySetting?.enable_pdf_download && (
-            <Button size={'icon'} className={'size-8'}>
-              <Download />
-            </Button>
-          )}
-          {quiz?.resultDeliverySetting?.enable_email_result && (
             <Button
               size={'icon'}
-              className="size-8 bg-orange-500 hover:bg-orange-400"
+              className={'size-8'}
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
             >
-              <Send />
+              {isDownloading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Download />
+              )}
             </Button>
           )}
         </div>
-        <p className="mb-4">Feel free to setup a meeting with an advisor.</p>
-        <Button
-          // to="/submission"
-          variant="primary-reverse"
-          // className={buttonVariants({
-          //   variant: 'primary-reverse',
-          //   size: 'lg',
-          //   className: 'flex items-center gap-2 max-w-xl! w-full',
-          // })}
-          className="flex items-center gap-2 max-w-xl! w-full"
-        >
-          <span>{quiz?.result_button_text || 'Speak To An Advisor'}</span>
-          <ChevronsRight />
-        </Button>
+        {quiz?.resultDeliverySetting?.result_page_position == 'before' && (
+          <>
+            <p className="mb-4">
+              Feel free to setup a meeting with an advisor.
+            </p>
+            <Link
+              to="/submission"
+              className={buttonVariants({
+                variant: 'primary-reverse',
+                size: 'lg',
+                className: 'flex items-center gap-2 max-w-xl! w-full',
+              })}
+            >
+              <span>{quiz?.result_button_text || 'Speak To An Advisor'}</span>
+              <ChevronsRight />
+            </Link>
+          </>
+        )}
       </div>
     </div>
   )

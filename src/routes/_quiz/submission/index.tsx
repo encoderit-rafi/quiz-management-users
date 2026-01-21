@@ -127,20 +127,19 @@ function RouteComponent() {
     submitQuiz(
       { uuid: quiz.uuid, payload },
       {
-        onSuccess: () => {
+        onSuccess: (res) => {
+          console.log('👉 ~ onSubmit ~ res:', res)
+          const submitId = res?.data?.id
           // navigate({ to: '/', search: { quiz_id: quiz.uuid } })
           toast.success('Successfully submitted!')
           // setMessage({ success: 'Successfully submitted!', error: '' })
           reset()
-          navigate({ to: '/result' })
+          quiz?.resultDeliverySetting?.result_page_position == 'after' &&
+            navigate({ to: '/result', search: { submit_id: submitId } })
         },
         onError: (err: any) => {
           console.log('👉 ~ onSubmit ~ err:', err)
           toast.error(err?.response?.data?.message || 'Failed to submit quiz')
-          // setMessage({
-          //   success: '',
-          //   error: err?.response?.data?.message || 'Failed to submit quiz',
-          // })
         },
       },
     )

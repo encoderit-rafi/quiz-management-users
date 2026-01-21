@@ -58,6 +58,7 @@ export const ResultDeliverySettingSchema = z.object({
   enable_link_share: z.boolean(),
   email_subject: z.string().nullable(),
   email_body: z.string().nullable(),
+  result_page_position: z.string(),
 })
 
 // Quiz Schema

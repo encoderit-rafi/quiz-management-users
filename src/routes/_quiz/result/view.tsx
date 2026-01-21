@@ -25,15 +25,6 @@ function RouteComponent() {
     id: id,
   })
 
-  // useEffect(() => {
-  //   if (resultData) {
-  //     const data = resultData?.data || resultData
-  //     if (data?.id) {
-  //       setResultPageId(data.id)
-  //     }
-  //   }
-  // }, [resultData, setResultPageId])
-
   if (isPending) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">

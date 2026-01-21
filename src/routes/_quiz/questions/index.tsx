@@ -48,8 +48,9 @@ function RouteComponent() {
     }
 
     if (currentQuestionIndex === totalQuestions - 1) {
-      // console.log('Submit Quiz', answers)
-      return navigate({ to: '/submission' })
+      return quiz?.resultDeliverySetting?.result_page_position == 'before'
+        ? navigate({ to: '/result' })
+        : navigate({ to: '/submission' })
     }
 
     nextQuestion()
