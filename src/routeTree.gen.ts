@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuizSubmissionIndexRouteImport } from './routes/_quiz/submission/index'
 import { Route as QuizResultIndexRouteImport } from './routes/_quiz/result/index'
 import { Route as QuizQuestionsIndexRouteImport } from './routes/_quiz/questions/index'
+import { Route as QuizResultViewRouteImport } from './routes/_quiz/result/view'
 
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
@@ -45,10 +46,16 @@ const QuizQuestionsIndexRoute = QuizQuestionsIndexRouteImport.update({
   path: '/questions/',
   getParentRoute: () => QuizRouteRoute,
 } as any)
+const QuizResultViewRoute = QuizResultViewRouteImport.update({
+  id: '/result/view',
+  path: '/result/view',
+  getParentRoute: () => QuizRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/result/view': typeof QuizResultViewRoute
   '/questions': typeof QuizQuestionsIndexRoute
   '/result': typeof QuizResultIndexRoute
   '/submission': typeof QuizSubmissionIndexRoute
@@ -56,6 +63,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/result/view': typeof QuizResultViewRoute
   '/questions': typeof QuizQuestionsIndexRoute
   '/result': typeof QuizResultIndexRoute
   '/submission': typeof QuizSubmissionIndexRoute
@@ -65,20 +73,28 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_quiz': typeof QuizRouteRouteWithChildren
   '/$': typeof SplatRoute
+  '/_quiz/result/view': typeof QuizResultViewRoute
   '/_quiz/questions/': typeof QuizQuestionsIndexRoute
   '/_quiz/result/': typeof QuizResultIndexRoute
   '/_quiz/submission/': typeof QuizSubmissionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/questions' | '/result' | '/submission'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/result/view'
+    | '/questions'
+    | '/result'
+    | '/submission'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/questions' | '/result' | '/submission'
+  to: '/' | '/$' | '/result/view' | '/questions' | '/result' | '/submission'
   id:
     | '__root__'
     | '/'
     | '/_quiz'
     | '/$'
+    | '/_quiz/result/view'
     | '/_quiz/questions/'
     | '/_quiz/result/'
     | '/_quiz/submission/'
@@ -134,16 +150,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizQuestionsIndexRouteImport
       parentRoute: typeof QuizRouteRoute
     }
+    '/_quiz/result/view': {
+      id: '/_quiz/result/view'
+      path: '/result/view'
+      fullPath: '/result/view'
+      preLoaderRoute: typeof QuizResultViewRouteImport
+      parentRoute: typeof QuizRouteRoute
+    }
   }
 }
 
 interface QuizRouteRouteChildren {
+  QuizResultViewRoute: typeof QuizResultViewRoute
   QuizQuestionsIndexRoute: typeof QuizQuestionsIndexRoute
   QuizResultIndexRoute: typeof QuizResultIndexRoute
   QuizSubmissionIndexRoute: typeof QuizSubmissionIndexRoute
 }
 
 const QuizRouteRouteChildren: QuizRouteRouteChildren = {
+  QuizResultViewRoute: QuizResultViewRoute,
   QuizQuestionsIndexRoute: QuizQuestionsIndexRoute,
   QuizResultIndexRoute: QuizResultIndexRoute,
   QuizSubmissionIndexRoute: QuizSubmissionIndexRoute,

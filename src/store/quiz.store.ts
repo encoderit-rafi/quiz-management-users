@@ -4,6 +4,7 @@ import { TQuizSchema } from '@/routes/_quiz/questions/-types'
 
 interface QuizState {
   quizId: string | number | null
+
   quiz: TQuizSchema | null
   currentQuestionIndex: number
   answers: Record<number, number[]> // questionId -> answerIds[]
@@ -29,6 +30,7 @@ export const useQuizStore = create<QuizState>()(
     (set, get) => ({
       quizId: null,
       quiz: null,
+
       currentQuestionIndex: 0,
       answers: {},
       started_at: null,

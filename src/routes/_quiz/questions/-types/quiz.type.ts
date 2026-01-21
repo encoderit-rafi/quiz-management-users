@@ -69,7 +69,8 @@ export const QuizSchema = z.object({
   title: z.string(),
   heading: z.string(),
   description: z.string(),
-
+  submit_button_text: z.string(),
+  result_button_text: z.string(),
   landing_page_text: z.string(), // HTML string
   cta_text: z.string(),
 

@@ -2,9 +2,17 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useQuizStore } from '@/store/quiz.store'
 import { useGetResultPage } from '../questions/-apis/use-get-result-page.api'
 // import { useEffect } from 'react'
-import { ChevronsRight, Loader2 } from 'lucide-react'
+import { ChevronsRight, Download, Loader2, Send } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  LinkedinIcon,
+  LinkedinShareButton,
+  TwitterShareButton,
+  XIcon,
+} from 'react-share'
+import { BASE_URL } from '@/consts'
 export const Route = createFileRoute('/_quiz/result/')({
   component: RouteComponent,
 })
@@ -20,6 +28,7 @@ function RouteComponent() {
     quiz_id: quiz?.uuid || '',
     mark: totalMarks,
   })
+  console.log('👉 ~ RouteComponent ~ resultData:', resultData)
 
   // useEffect(() => {
   //   if (resultData) {
@@ -63,6 +72,41 @@ function RouteComponent() {
         }}
       />
       <div className="flex flex-col items-center justify-center my-4">
+        <div className="flex items-center gap-2 justify-center">
+          {quiz?.resultDeliverySetting?.enable_link_share && (
+            <>
+              <FacebookShareButton
+                url={`${BASE_URL}/_quiz/result/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id} `}
+              >
+                <FacebookIcon size={32} round />
+              </FacebookShareButton>
+              <TwitterShareButton
+                url={`${BASE_URL}/_quiz/result/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`}
+                title={quiz?.title}
+              >
+                <XIcon size={32} round />
+              </TwitterShareButton>
+              <LinkedinShareButton
+                url={`${BASE_URL}/_quiz/result/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`}
+              >
+                <LinkedinIcon size={32} round />
+              </LinkedinShareButton>
+            </>
+          )}
+          {quiz?.resultDeliverySetting?.enable_pdf_download && (
+            <Button size={'icon'} className={'size-8'}>
+              <Download />
+            </Button>
+          )}
+          {quiz?.resultDeliverySetting?.enable_email_result && (
+            <Button
+              size={'icon'}
+              className="size-8 bg-orange-500 hover:bg-orange-400"
+            >
+              <Send />
+            </Button>
+          )}
+        </div>
         <p className="mb-4">Feel free to setup a meeting with an advisor.</p>
         <Button
           // to="/submission"
@@ -74,7 +118,7 @@ function RouteComponent() {
           // })}
           className="flex items-center gap-2 max-w-xl! w-full"
         >
-          <span>Speak To An Advisor</span>
+          <span>{quiz?.result_button_text || 'Speak To An Advisor'}</span>
           <ChevronsRight />
         </Button>
       </div>

@@ -5,4 +5,9 @@ export const QUERY_KEYS = {
     quiz_id,
     mark,
   ],
+  GET_RESULT: (quiz_id: string | number, id: string | number) => [
+    'get-result',
+    quiz_id,
+    id,
+  ],
 }
