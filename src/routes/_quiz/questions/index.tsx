@@ -49,7 +49,7 @@ function RouteComponent() {
 
     if (currentQuestionIndex === totalQuestions - 1) {
       // console.log('Submit Quiz', answers)
-      return navigate({ to: '/result' })
+      return navigate({ to: '/submission' })
     }
 
     nextQuestion()

@@ -1,16 +1,16 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useQuizStore } from '@/store/quiz.store'
 import { useGetResultPage } from '../questions/-apis/use-get-result-page.api'
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 import { ChevronsRight, Loader2 } from 'lucide-react'
-import { buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_quiz/result/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { quiz, getTotalMarks, setResultPageId } = useQuizStore()
+  const { quiz, getTotalMarks } = useQuizStore()
   const totalMarks = getTotalMarks()
   const {
     data: resultData,
@@ -21,14 +21,14 @@ function RouteComponent() {
     mark: totalMarks,
   })
 
-  useEffect(() => {
-    if (resultData) {
-      const data = resultData?.data || resultData
-      if (data?.id) {
-        setResultPageId(data.id)
-      }
-    }
-  }, [resultData, setResultPageId])
+  // useEffect(() => {
+  //   if (resultData) {
+  //     const data = resultData?.data || resultData
+  //     if (data?.id) {
+  //       setResultPageId(data.id)
+  //     }
+  //   }
+  // }, [resultData, setResultPageId])
 
   if (isPending) {
     return (
@@ -62,18 +62,21 @@ function RouteComponent() {
           __html: result?.content || '',
         }}
       />
-      <div className="flex justify-center my-4">
-        <Link
-          to="/submission"
-          className={buttonVariants({
-            variant: 'primary-reverse',
-            size: 'lg',
-            className: 'flex items-center gap-2 max-w-xl! w-full',
-          })}
+      <div className="flex flex-col items-center justify-center my-4">
+        <p className="mb-4">Feel free to setup a meeting with an advisor.</p>
+        <Button
+          // to="/submission"
+          variant="primary-reverse"
+          // className={buttonVariants({
+          //   variant: 'primary-reverse',
+          //   size: 'lg',
+          //   className: 'flex items-center gap-2 max-w-xl! w-full',
+          // })}
+          className="flex items-center gap-2 max-w-xl! w-full"
         >
           <span>Speak To An Advisor</span>
           <ChevronsRight />
-        </Link>
+        </Button>
       </div>
     </div>
   )

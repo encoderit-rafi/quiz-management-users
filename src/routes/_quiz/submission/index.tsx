@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useQuizStore } from '@/store/quiz.store'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,21 +9,44 @@ import { Input } from '@/components/ui/input'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { ChevronsRight, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
+import { useGetResultPage } from '../questions/-apis'
+import { useEffect } from 'react'
+// import { useState } from 'react'
+// import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/_quiz/submission/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const [message, setMessage] = useState<{ success: string; error: string }>({
-    success: '',
-    error: '',
+  const navigate = useNavigate()
+  // const [message, setMessage] = useState<{ success: string; error: string }>({
+  //   success: '',
+  //   error: '',
+  // })
+
+  const { quiz, answers, resultPageId, getTotalMarks, setResultPageId } =
+    useQuizStore()
+  const { mutate: submitQuiz, isPending: isSubmitting } = useQuizSubmission()
+
+  const totalMarks = getTotalMarks()
+  const {
+    data: resultData,
+    isPending,
+    // isError,
+  } = useGetResultPage({
+    quiz_id: quiz?.uuid || '',
+    mark: totalMarks,
   })
 
-  const { quiz, answers, resultPageId, getTotalMarks } = useQuizStore()
-  const { mutate: submitQuiz, isPending: isSubmitting } = useQuizSubmission()
+  useEffect(() => {
+    if (resultData) {
+      const data = resultData?.data || resultData
+      if (data?.id) {
+        setResultPageId(data.id)
+      }
+    }
+  }, [resultData, setResultPageId])
 
   const leadFields = quiz?.leadFormSetting?.fields || []
   console.log('👉 ~ RouteComponent ~ leadFields:', quiz)
@@ -97,7 +120,7 @@ function RouteComponent() {
       quiz_id: quiz.id,
       user_data: data,
       total_score,
-      result_page_id: resultPageId || 0,
+      result_page_id: resultPageId || -1,
       answers: formattedAnswers,
     }
 
@@ -107,16 +130,17 @@ function RouteComponent() {
         onSuccess: () => {
           // navigate({ to: '/', search: { quiz_id: quiz.uuid } })
           toast.success('Successfully submitted!')
-          setMessage({ success: 'Successfully submitted!', error: '' })
+          // setMessage({ success: 'Successfully submitted!', error: '' })
           reset()
+          navigate({ to: '/result' })
         },
         onError: (err: any) => {
           console.log('👉 ~ onSubmit ~ err:', err)
           toast.error(err?.response?.data?.message || 'Failed to submit quiz')
-          setMessage({
-            success: '',
-            error: err?.response?.data?.message || 'Failed to submit quiz',
-          })
+          // setMessage({
+          //   success: '',
+          //   error: err?.response?.data?.message || 'Failed to submit quiz',
+          // })
         },
       },
     )
@@ -169,7 +193,7 @@ function RouteComponent() {
             </Field>
           ))}
 
-        <div
+        {/* <div
           className={cn('text-center hidden', {
             'text-green-500': Boolean(message.success),
             'text-red-500': Boolean(message.error),
@@ -177,14 +201,14 @@ function RouteComponent() {
           })}
         >
           {message.success || message.error}
-        </div>
+        </div> */}
 
         <Button
           type="submit"
           variant="primary-reverse"
           size="lg"
           className="w-full h-14 text-lg"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isPending}
         >
           <div className="flex items-center gap-2">
             Submit
@@ -193,6 +217,7 @@ function RouteComponent() {
             ) : (
               <ChevronsRight />
             )}
+            {isPending && 'Please wait...'}
           </div>
         </Button>
       </form>
