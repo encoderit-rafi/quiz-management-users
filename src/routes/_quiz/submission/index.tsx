@@ -134,8 +134,13 @@ function RouteComponent() {
           toast.success('Successfully submitted!')
           // setMessage({ success: 'Successfully submitted!', error: '' })
           reset()
-          quiz?.resultDeliverySetting?.result_page_position == 'after' &&
+          console.log(
+            '👉 ~ onSubmit ~ quiz?.resultDeliverySetting?.result_page_position:',
+            quiz?.resultDeliverySetting?.result_page_position,
+          )
+          if (quiz?.resultDeliverySetting?.result_page_position == 'after') {
             navigate({ to: '/result', search: { submit_id: submitId } })
+          }
         },
         onError: (err: any) => {
           console.log('👉 ~ onSubmit ~ err:', err)
@@ -210,13 +215,12 @@ function RouteComponent() {
           disabled={isSubmitting || isPending}
         >
           <div className="flex items-center gap-2">
-            {quiz.result_button_text || 'Submit'}
+            {isPending ? 'Please wait...' : quiz.result_button_text || 'Submit'}
             {isSubmitting ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             ) : (
               <ChevronsRight />
             )}
-            {isPending && 'Please wait...'}
           </div>
         </Button>
       </form>
