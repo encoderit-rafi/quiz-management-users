@@ -12,7 +12,7 @@ export default function Banner({
       <img
         src={logo}
         alt={title}
-        className="size-10 rounded-md object-center object-cover"
+        className="h-10 w-auto rounded-md object-center object-cover"
       />
       <div className="">
         <h3 className="font-light text-sm">{heading}</h3>

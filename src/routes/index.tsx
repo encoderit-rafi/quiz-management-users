@@ -38,18 +38,15 @@ function RouteComponent() {
   )
 
   useEffect(() => {
-    const uuid = quiz?.uuid
-    if (uuid) {
+    const id = quiz?.id
+    if (id) {
       const viewQuizzes = JSON.parse(localStorage.getItem('view_quiz') || '[]')
-      if (!viewQuizzes.includes(uuid)) {
-        addViewCount(uuid)
-        localStorage.setItem(
-          'view_quiz',
-          JSON.stringify([...viewQuizzes, uuid]),
-        )
+      if (!viewQuizzes.includes(id)) {
+        addViewCount(id)
+        localStorage.setItem('view_quiz', JSON.stringify([...viewQuizzes, id]))
       }
     }
-  }, [quiz?.uuid, addViewCount])
+  }, [quiz?.id, addViewCount])
 
   useEffect(() => {
     if (quiz) {
@@ -67,9 +64,15 @@ function RouteComponent() {
   //   throw notFound()
   // }
 
-  if (isLoading || (quiz?.background_image && !isImageLoaded))
+  if (isLoading)
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-50 text-center">
+        <Loader2 className=" h-5 w-5 animate-spin" />
+      </div>
+    )
+  if (quiz?.background_image && !isImageLoaded)
+    return (
+      <div className="flex h-screen w-full flex-col items-center justify-center bg-white-50 backdrop-blur-sm text-center">
         <Loader2 className=" h-5 w-5 animate-spin" />
       </div>
     )
