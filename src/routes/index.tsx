@@ -85,7 +85,7 @@ function RouteComponent() {
   }
   return (
     <div
-      className={`min-h-screen flex flex-col overflow-hidden bg-cover bg-center after:absolute after:inset-0 after:bg-linear-to-r after:from-black after:from-20% after:to-transparent text-white`}
+      className={`relative min-h-screen flex flex-col bg-cover bg-center after:absolute after:inset-0 after:bg-linear-to-r after:from-black after:from-20% after:to-transparent text-white`}
       style={
         {
           backgroundImage: `url(${quiz?.background_image})`,
@@ -94,7 +94,7 @@ function RouteComponent() {
         } as React.CSSProperties
       }
     >
-      <div className="flex-1 flex flex-col overflow-hidden relative z-10">
+      <div className="flex-1 flex flex-col relative z-10">
         <nav className="bg-white/20 p-2 shrink-0 backdrop-blur-xs">
           <Banner
             logo={quiz?.logo || ''}
