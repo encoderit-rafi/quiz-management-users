@@ -215,7 +215,7 @@ function RouteComponent() {
           disabled={isSubmitting || isPending}
         >
           <div className="flex items-center gap-2">
-            {isPending ? 'Please wait...' : quiz.result_button_text || 'Submit'}
+            {isPending ? 'Please wait...' : 'Submit'}
             {isSubmitting ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             ) : (

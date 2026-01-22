@@ -101,7 +101,7 @@ function RouteComponent() {
               ({currentQuestionIndex + 1} - {totalQuestions}) Next Question
             </span>
           ) : (
-            'Submit Quiz'
+            quiz?.submit_button_text || 'Submit Quiz'
           )}
           <ChevronsRight />
         </Button>
