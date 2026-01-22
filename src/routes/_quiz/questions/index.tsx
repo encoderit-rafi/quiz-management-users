@@ -66,8 +66,9 @@ function RouteComponent() {
 
       <QuestionTitle question={currentQuestion.question_text} />
       <div className="hidden md:block text-lg font-semibold rounded-full bg-(--secondary-color)/20 text-(--secondary-color) py-2 px-10 my-5 w-fit text-center mx-auto">
-        {currentQuestion.multiselect ? 'Multiple Select' : 'Select'} 1 -{' '}
-        {currentQuestion?.answers?.length} Options
+        {/* {currentQuestion.multiselect ? 'Multiple Select' : 'Select'} 1 -{' '}
+        {currentQuestion?.answers?.length} Options */}
+        Svara på frågan nedan
       </div>
 
       <div className="flex flex-col space-y-3">
