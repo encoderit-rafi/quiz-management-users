@@ -127,23 +127,17 @@ function RouteComponent() {
     submitQuiz(
       { uuid: quiz.uuid, payload },
       {
-        onSuccess: (res) => {
-          console.log('👉 ~ onSubmit ~ res:', res)
-          const submitId = res?.data?.id
-          // navigate({ to: '/', search: { quiz_id: quiz.uuid } })
+        onSuccess: () => {
           toast.success('Successfully submitted!')
-          // setMessage({ success: 'Successfully submitted!', error: '' })
           reset()
-          console.log(
-            '👉 ~ onSubmit ~ quiz?.resultDeliverySetting?.result_page_position:',
-            quiz?.resultDeliverySetting?.result_page_position,
-          )
-          if (quiz?.resultDeliverySetting?.result_page_position == 'after') {
-            navigate({ to: '/result', search: { submit_id: submitId } })
+          if (quiz?.resultDeliverySetting?.result_page_position == 'before') {
+            navigate({
+              to: '/result/view',
+              search: { quiz_id: quiz.uuid, id: quiz.id },
+            })
           }
         },
         onError: (err: any) => {
-          console.log('👉 ~ onSubmit ~ err:', err)
           toast.error(err?.response?.data?.message || 'Failed to submit quiz')
         },
       },
@@ -196,16 +190,6 @@ function RouteComponent() {
               )}
             </Field>
           ))}
-
-        {/* <div
-          className={cn('text-center hidden', {
-            'text-green-500': Boolean(message.success),
-            'text-red-500': Boolean(message.error),
-            block: Boolean(message.success || message.error),
-          })}
-        >
-          {message.success || message.error}
-        </div> */}
 
         <Button
           type="submit"
