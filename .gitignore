@@ -6,6 +6,12 @@ node_modules/
 # ======================
 # Build output
 # ======================
+output
+.output
+.output/
+output/
+dist/
+dist/
 dist/
 dist-ssr/
 # ======================
