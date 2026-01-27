@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuizStore } from '@/store/quiz.store'
 import { useGetResultPage } from '../questions/-apis/use-get-result-page.api'
 // import { useEffect } from 'react'
-import { ChevronsRight, Download, Loader2 } from 'lucide-react'
+import { ChevronsRight, Copy, Download, Loader2 } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { jsPDF } from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -16,6 +16,7 @@ import {
   XIcon,
 } from 'react-share'
 import { BASE_URL } from '@/consts'
+import { toast } from 'sonner'
 export const Route = createFileRoute('/_quiz/result/')({
   component: RouteComponent,
 })
@@ -129,6 +130,17 @@ function RouteComponent() {
   //     }
   //   }
   // }, [resultData, setResultPageId])
+  const handleCopyLink = async () => {
+    try {
+      const link = `${window.location.origin}/result/view/?quiz_id=${quiz?.uuid}&id=${quiz?.id}`
+      // console.log('👉 ~ handleCopyLink ~ link:', link)
+      await navigator.clipboard.writeText(link)
+      toast.success('Link copied to clipboard!')
+      // optional: show toast / alert here
+    } catch (err) {
+      console.error('Failed to copy link:', err)
+    }
+  }
 
   if (isPending) {
     return (
@@ -199,6 +211,13 @@ function RouteComponent() {
               )}
             </Button>
           )}
+          <Button
+            size={'icon'}
+            className={'size-8 bg-amber-500 hover:bg-amber-400'}
+            onClick={handleCopyLink}
+          >
+            <Copy />
+          </Button>
         </div>
         {quiz?.resultDeliverySetting?.result_page_position == 'before' && (
           <>
