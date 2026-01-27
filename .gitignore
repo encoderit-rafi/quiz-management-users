@@ -9,6 +9,9 @@ node_modules/
 output
 .output
 .output/
+output/
+dist/
+dist/
 dist/
 dist-ssr/
 # ======================
