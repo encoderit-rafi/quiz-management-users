@@ -1,19 +1,21 @@
 import { createFileRoute, useSearch } from '@tanstack/react-router'
-// import { useQuizStore } from '@/store/quiz.store'
 import { useGetResult } from '../questions/-apis'
-// import { useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
+
 const SearchParams = z.object({
   quiz_id: z.string(),
   id: z.union([z.number(), z.string()]),
 })
+
 export const Route = createFileRoute('/_quiz/result/view')({
   validateSearch: SearchParams,
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const { t } = useTranslation()
   const { quiz_id, id } = useSearch({ from: Route.id })
 
   const {
@@ -29,7 +31,7 @@ function RouteComponent() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
         <Loader2 className="w-10 h-10 animate-spin text-(--primary-color)" />
-        <p className="mt-4 text-gray-500">Calculating your results...</p>
+        <p className="mt-4 text-gray-500">{t('result.calculating')}</p>
       </div>
     )
   }
@@ -38,11 +40,9 @@ function RouteComponent() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
         <h2 className="text-2xl font-bold text-red-500">
-          Oops! Something went wrong.
+          {t('result.errorTitle')}
         </h2>
-        <p className="mt-2 text-gray-600">
-          We couldn't retrieve your results. Please try again later.
-        </p>
+        <p className="mt-2 text-gray-600">{t('result.errorDescription')}</p>
       </div>
     )
   }
