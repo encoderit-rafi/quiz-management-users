@@ -56,14 +56,12 @@ const resources = {
     translation: {
       common: {
         loading: 'Laddar...',
-        back: 'Bakåt',
+        back: 'Tillbaka',
         next: 'Nästa',
         submit: 'Skicka',
         pleaseWait: 'Vänligen vänta...',
       },
-      intro: {
-        startQuiz: 'Starta quiz',
-      },
+      intro: { startQuiz: 'Starta quiz' },
       questions: {
         errorSelect: 'Välj ett svar för att fortsätta',
         instruction: 'Svara på frågan nedan',
@@ -76,29 +74,30 @@ const resources = {
           name: 'Namn',
           namePlaceholder: 'Ange ditt namn',
           email: 'E-post',
-          emailPlaceholder: 'Ange din e-post',
+          emailPlaceholder: 'Ange din e-postadress',
           fieldPlaceholder: 'Ange din {{label}}',
-          required: '{{label}} krävs',
+          required: '{{label}} är obligatoriskt',
           invalidEmail: 'Ogiltig e-postadress',
         },
-        success: 'Inskickat!',
-        error: 'Misslyckades med att skicka quizet',
+        success: 'Formuläret skickades!',
+        error: 'Det gick inte att skicka quizet',
       },
       result: {
-        calculating: 'Beräknar dina resultat...',
+        calculating: 'Beräknar ditt resultat...',
         errorTitle: 'Hoppsan! Något gick fel.',
         errorDescription:
-          'Vi kunde inte hämta dina resultat. Försök igen senare.',
-        copySuccess: 'Länken kopierad till urklipp!',
-        copyError: 'Misslyckades med att kopiera länken',
+          'Vi kunde inte hämta ditt resultat. Försök igen senare.',
+        copySuccess: 'Länken har kopierats!',
+        copyError: 'Det gick inte att kopiera länken',
         downloading: 'Laddar ner...',
-        pdfFail: 'Misslyckades med att generera PDF. Se konsolen för detaljer.',
-        advisorMeeting: 'Boka gärna ett möte med en rådgivare.',
+        pdfFail:
+          'Det gick inte att skapa PDF-filen. Kontrollera konsolen för mer information.',
+        advisorMeeting: 'Du är välkommen att boka ett möte med en rådgivare.',
       },
       notFound: {
         title: 'Sidan hittades inte',
         description:
-          'Hoppsan! Sidan du letar efter finns inte. Den kan ha flyttats eller tagits bort.',
+          'Sidan du letar efter finns inte. Den kan ha flyttats eller tagits bort.',
       },
     },
   },
