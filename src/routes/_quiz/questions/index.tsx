@@ -7,12 +7,14 @@ import AnswerCard from '@/components/app/answer-card'
 import { useQuizStore } from '@/store/quiz.store'
 import { ChevronsRight } from 'lucide-react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 export const Route = createFileRoute('/_quiz/questions/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const {
     quiz,
@@ -43,7 +45,7 @@ function RouteComponent() {
         : []
 
     if (selectedAnswerIds.length === 0) {
-      toast.error('Please select an answer to continue')
+      toast.error(t('questions.errorSelect'))
       return
     }
 
@@ -68,7 +70,7 @@ function RouteComponent() {
       <div className="hidden md:block text-lg font-semibold rounded-full bg-(--secondary-color)/20 text-(--secondary-color) py-2 px-10 my-5 w-fit text-center mx-auto">
         {/* {currentQuestion.multiselect ? 'Multiple Select' : 'Select'} 1 -{' '}
         {currentQuestion?.answers?.length} Options */}
-        Svara på frågan nedan
+        {t('questions.instruction')}
       </div>
 
       <div className="flex flex-col space-y-3">
@@ -98,10 +100,10 @@ function RouteComponent() {
         >
           {currentQuestionIndex < totalQuestions - 1 ? (
             <span>
-              ({currentQuestionIndex + 1} - {totalQuestions}) Next Question
+              ({currentQuestionIndex + 1} - {totalQuestions}) {t('common.next')}
             </span>
           ) : (
-            quiz?.submit_button_text || 'Submit Quiz'
+            quiz?.submit_button_text || t('common.submit')
           )}
           <ChevronsRight />
         </Button>
@@ -113,7 +115,7 @@ function RouteComponent() {
             className="w-full text-lg h-14"
             onClick={handleBack}
           >
-            Back
+            {t('common.back')}
           </Button>
         )}
       </div>

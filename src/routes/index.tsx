@@ -10,7 +10,8 @@ import { useQuizViewCount } from './_quiz/questions/-apis/use-quiz-view-count.ap
 import NotFound from '@/components/app/not-found'
 import { ChevronsRight, Loader2 } from 'lucide-react'
 import { usePreloadImage } from '@/hooks/use-preload-image'
-
+import '@/lib/i18n'
+import { useTranslation } from 'react-i18next'
 const searchSchema = z.object({
   quiz_id: z.union([z.string(), z.number()]).optional().catch(undefined),
 })
@@ -21,6 +22,7 @@ export const Route = createFileRoute('/')({
 })
 
 function RouteComponent() {
+  const { t } = useTranslation()
   const { quiz_id } = Route.useSearch()
   console.log('👉 ~ RouteComponent ~ quiz_id:', quiz_id)
   const {
@@ -108,10 +110,9 @@ function RouteComponent() {
               {quiz?.title || ''}
             </h1>
             <p className="text-lg">{quiz?.description || ''}</p>
-
             <Button variant={'primary'} size={'lg'}>
               <Link to="/questions" className="flex items-center gap-2">
-                {quiz?.cta_text || 'Start Quiz'} <ChevronsRight />
+                {quiz?.cta_text || t('intro.startQuiz')} <ChevronsRight />
               </Link>
             </Button>
             <div
