@@ -64,7 +64,9 @@ const resources = {
         submit: 'Skicka',
         pleaseWait: 'Vänligen vänta...',
       },
-      intro: { startQuiz: 'Starta quiz' },
+      intro: {
+        startQuiz: 'Starta quiz',
+      },
       questions: {
         errorSelect: 'Välj ett svar för att fortsätta',
         instruction: 'Svara på frågan nedan',
@@ -85,7 +87,7 @@ const resources = {
           required: '{{label}} är obligatoriskt',
           invalidEmail: 'Ogiltig e-postadress',
         },
-        success: 'Formuläret skickades!',
+        success: 'Formuläret har skickats!',
         error: 'Det gick inte att skicka quizet',
       },
       result: {
@@ -108,7 +110,6 @@ const resources = {
     },
   },
 }
-
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
