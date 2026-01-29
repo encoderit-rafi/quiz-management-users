@@ -134,7 +134,7 @@ function RouteComponent() {
           reset()
           quiz?.resultDeliverySetting?.result_page_position == 'before'
             ? navigate({
-                to: '/result/view',
+                to: '/view',
                 search: { quiz_id: quiz.uuid, id: quiz.id },
               })
             : navigate({ to: '/result', search: { quiz_id: quiz.uuid } })

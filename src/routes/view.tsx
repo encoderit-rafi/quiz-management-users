@@ -1,15 +1,16 @@
 import { createFileRoute, useSearch } from '@tanstack/react-router'
-import { useGetResult } from '../questions/-apis'
+// import { useGetResult } from '../questions/-apis'
 import { Loader2 } from 'lucide-react'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
+import { useGetResult } from './_quiz/questions/-apis'
 
 const SearchParams = z.object({
   quiz_id: z.string(),
   id: z.union([z.number(), z.string()]),
 })
 
-export const Route = createFileRoute('/_quiz/result/view')({
+export const Route = createFileRoute('/view')({
   validateSearch: SearchParams,
   component: RouteComponent,
 })

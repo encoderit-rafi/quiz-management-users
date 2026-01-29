@@ -6,7 +6,6 @@ import { useQuizStore } from '@/store/quiz.store'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { usePreloadImage } from '@/hooks/use-preload-image'
 import { Loader2 } from 'lucide-react'
-// import { useEffect } from 'react'
 
 export const Route = createFileRoute('/_quiz')({
   component: RouteComponent,
@@ -31,7 +30,6 @@ function RouteComponent() {
   if (!Boolean(quiz?.uuid)) {
     return <NotFound />
   }
-  console.log('👉 ~ Question Image:', questions[currentQuestionIndex]?.image)
   return (
     <div
       className="relative min-h-dvh"

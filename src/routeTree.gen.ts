@@ -9,14 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ViewRouteImport } from './routes/view'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as QuizRouteRouteImport } from './routes/_quiz/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuizSubmissionIndexRouteImport } from './routes/_quiz/submission/index'
 import { Route as QuizResultIndexRouteImport } from './routes/_quiz/result/index'
 import { Route as QuizQuestionsIndexRouteImport } from './routes/_quiz/questions/index'
-import { Route as QuizResultViewRouteImport } from './routes/_quiz/result/view'
 
+const ViewRoute = ViewRouteImport.update({
+  id: '/view',
+  path: '/view',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
@@ -46,16 +51,11 @@ const QuizQuestionsIndexRoute = QuizQuestionsIndexRouteImport.update({
   path: '/questions/',
   getParentRoute: () => QuizRouteRoute,
 } as any)
-const QuizResultViewRoute = QuizResultViewRouteImport.update({
-  id: '/result/view',
-  path: '/result/view',
-  getParentRoute: () => QuizRouteRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/result/view': typeof QuizResultViewRoute
+  '/view': typeof ViewRoute
   '/questions': typeof QuizQuestionsIndexRoute
   '/result': typeof QuizResultIndexRoute
   '/submission': typeof QuizSubmissionIndexRoute
@@ -63,7 +63,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/result/view': typeof QuizResultViewRoute
+  '/view': typeof ViewRoute
   '/questions': typeof QuizQuestionsIndexRoute
   '/result': typeof QuizResultIndexRoute
   '/submission': typeof QuizSubmissionIndexRoute
@@ -73,28 +73,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_quiz': typeof QuizRouteRouteWithChildren
   '/$': typeof SplatRoute
-  '/_quiz/result/view': typeof QuizResultViewRoute
+  '/view': typeof ViewRoute
   '/_quiz/questions/': typeof QuizQuestionsIndexRoute
   '/_quiz/result/': typeof QuizResultIndexRoute
   '/_quiz/submission/': typeof QuizSubmissionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/$'
-    | '/result/view'
-    | '/questions'
-    | '/result'
-    | '/submission'
+  fullPaths: '/' | '/$' | '/view' | '/questions' | '/result' | '/submission'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/result/view' | '/questions' | '/result' | '/submission'
+  to: '/' | '/$' | '/view' | '/questions' | '/result' | '/submission'
   id:
     | '__root__'
     | '/'
     | '/_quiz'
     | '/$'
-    | '/_quiz/result/view'
+    | '/view'
     | '/_quiz/questions/'
     | '/_quiz/result/'
     | '/_quiz/submission/'
@@ -104,10 +98,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   QuizRouteRoute: typeof QuizRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
+  ViewRoute: typeof ViewRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/view': {
+      id: '/view'
+      path: '/view'
+      fullPath: '/view'
+      preLoaderRoute: typeof ViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$': {
       id: '/$'
       path: '/$'
@@ -150,25 +152,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizQuestionsIndexRouteImport
       parentRoute: typeof QuizRouteRoute
     }
-    '/_quiz/result/view': {
-      id: '/_quiz/result/view'
-      path: '/result/view'
-      fullPath: '/result/view'
-      preLoaderRoute: typeof QuizResultViewRouteImport
-      parentRoute: typeof QuizRouteRoute
-    }
   }
 }
 
 interface QuizRouteRouteChildren {
-  QuizResultViewRoute: typeof QuizResultViewRoute
   QuizQuestionsIndexRoute: typeof QuizQuestionsIndexRoute
   QuizResultIndexRoute: typeof QuizResultIndexRoute
   QuizSubmissionIndexRoute: typeof QuizSubmissionIndexRoute
 }
 
 const QuizRouteRouteChildren: QuizRouteRouteChildren = {
-  QuizResultViewRoute: QuizResultViewRoute,
   QuizQuestionsIndexRoute: QuizQuestionsIndexRoute,
   QuizResultIndexRoute: QuizResultIndexRoute,
   QuizSubmissionIndexRoute: QuizSubmissionIndexRoute,
@@ -182,6 +175,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   QuizRouteRoute: QuizRouteRouteWithChildren,
   SplatRoute: SplatRoute,
+  ViewRoute: ViewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

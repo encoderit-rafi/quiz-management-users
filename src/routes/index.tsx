@@ -61,10 +61,6 @@ function RouteComponent() {
     }
   }, [quiz_id, activeQuizId, setActiveQuizId])
 
-  // if (!effectiveId) {
-  //   throw notFound()
-  // }
-
   if (isLoading)
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-50 text-center">

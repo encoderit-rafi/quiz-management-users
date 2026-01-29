@@ -108,7 +108,7 @@ function RouteComponent() {
 
   const handleCopyLink = async () => {
     try {
-      const link = `${window.location.origin}/result/view/?quiz_id=${quiz?.uuid}&id=${quiz?.id}`
+      const link = `${window.location.origin}/view/?quiz_id=${quiz?.uuid}&id=${quiz?.id}`
       await navigator.clipboard.writeText(link)
       toast.success(t('result.copySuccess'))
     } catch (err) {
@@ -153,18 +153,18 @@ function RouteComponent() {
           {quiz?.resultDeliverySetting?.enable_link_share && (
             <>
               <FacebookShareButton
-                url={`${BASE_URL}/_quiz/result/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id} `}
+                url={`${BASE_URL}/_quiz/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id} `}
               >
                 <FacebookIcon size={32} round />
               </FacebookShareButton>
               <TwitterShareButton
-                url={`${BASE_URL}/_quiz/result/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`}
+                url={`${BASE_URL}/_quiz/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`}
                 title={quiz?.title}
               >
                 <XIcon size={32} round />
               </TwitterShareButton>
               <LinkedinShareButton
-                url={`${BASE_URL}/_quiz/result/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`}
+                url={`${BASE_URL}/_quiz/view?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`}
               >
                 <LinkedinIcon size={32} round />
               </LinkedinShareButton>
