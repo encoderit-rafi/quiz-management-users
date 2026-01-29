@@ -10,7 +10,6 @@ import { useQuizViewCount } from './_quiz/questions/-apis/use-quiz-view-count.ap
 import NotFound from '@/components/app/not-found'
 import { ChevronsRight, Loader2 } from 'lucide-react'
 import { usePreloadImage } from '@/hooks/use-preload-image'
-import '@/lib/i18n'
 import { useTranslation } from 'react-i18next'
 const searchSchema = z.object({
   quiz_id: z.union([z.string(), z.number()]).optional().catch(undefined),
