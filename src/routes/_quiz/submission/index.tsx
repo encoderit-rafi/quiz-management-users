@@ -50,10 +50,19 @@ function RouteComponent() {
 
     const isRequired = field.enabled && field.required
 
+    const fieldLabel =
+      field.field_name === 'name' ||
+      field.field_name === 'email' ||
+      field.field_name === 'phone' ||
+      field.field_name === 'zip' ||
+      field.field_name === 'address'
+        ? t(`submission.form.${field.field_name}`)
+        : field.label
+
     if (isRequired) {
       fieldSchema = (fieldSchema as z.ZodString).min(
         1,
-        t('submission.form.required', { label: field.label }),
+        t('submission.form.required', { label: fieldLabel }),
       )
     } else {
       fieldSchema = fieldSchema.optional().or(z.literal(''))
@@ -163,25 +172,36 @@ function RouteComponent() {
 
         {leadFields
           .filter((field) => field.enabled && field.field_name !== 'name')
-          .map((field) => (
-            <Field key={field.field_name}>
-              {/* <FieldLabel htmlFor={field.field_name}>{field.label}</FieldLabel> */}
-              <Input
-                id={field.field_name}
-                type={field.type}
-                className="bg-(--primary-color)/10 border-(--primary-color)/20 rounded-sm h-12 focus-visible:ring-(--primary-color)/30 focus-visible:border-(--primary-color)/20"
-                placeholder={t('submission.form.fieldPlaceholder', {
-                  label: field.label.toLowerCase(),
-                })}
-                {...register(field.field_name)}
-              />
-              {errors[field.field_name] && (
-                <FieldError>
-                  {String(errors[field.field_name]?.message)}
-                </FieldError>
-              )}
-            </Field>
-          ))}
+          .map((field) => {
+            const fieldLabel =
+              field.field_name === 'name' ||
+              field.field_name === 'email' ||
+              field.field_name === 'phone' ||
+              field.field_name === 'zip' ||
+              field.field_name === 'address'
+                ? t(`submission.form.${field.field_name}`)
+                : field.label
+
+            return (
+              <Field key={field.field_name}>
+                {/* <FieldLabel htmlFor={field.field_name}>{fieldLabel}</FieldLabel> */}
+                <Input
+                  id={field.field_name}
+                  type={field.type}
+                  className="bg-(--primary-color)/10 border-(--primary-color)/20 rounded-sm h-12 focus-visible:ring-(--primary-color)/30 focus-visible:border-(--primary-color)/20"
+                  placeholder={t('submission.form.fieldPlaceholder', {
+                    label: fieldLabel,
+                  })}
+                  {...register(field.field_name)}
+                />
+                {errors[field.field_name] && (
+                  <FieldError>
+                    {String(errors[field.field_name]?.message)}
+                  </FieldError>
+                )}
+              </Field>
+            )
+          })}
 
         <Button
           type="submit"
