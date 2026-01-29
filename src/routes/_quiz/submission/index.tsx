@@ -123,12 +123,12 @@ function RouteComponent() {
         onSuccess: () => {
           toast.success(t('submission.success'))
           reset()
-          if (quiz?.resultDeliverySetting?.result_page_position == 'before') {
-            navigate({
-              to: '/result/view',
-              search: { quiz_id: quiz.uuid, id: quiz.id },
-            })
-          }
+          quiz?.resultDeliverySetting?.result_page_position == 'before'
+            ? navigate({
+                to: '/result/view',
+                search: { quiz_id: quiz.uuid, id: quiz.id },
+              })
+            : navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
         },
         onError: (err: any) => {
           toast.error(err?.response?.data?.message || t('submission.error'))
@@ -148,7 +148,7 @@ function RouteComponent() {
         {(leadFields.find((f) => f.field_name === 'name')?.enabled !== false ||
           !leadFields.find((f) => f.field_name === 'name')) && (
           <Field>
-            <FieldLabel htmlFor="name">{t('submission.form.name')}</FieldLabel>
+            {/* <FieldLabel htmlFor="name">{t('submission.form.name')}</FieldLabel> */}
             <Input
               id="name"
               placeholder={t('submission.form.namePlaceholder')}
@@ -165,7 +165,7 @@ function RouteComponent() {
           .filter((field) => field.enabled && field.field_name !== 'name')
           .map((field) => (
             <Field key={field.field_name}>
-              <FieldLabel htmlFor={field.field_name}>{field.label}</FieldLabel>
+              {/* <FieldLabel htmlFor={field.field_name}>{field.label}</FieldLabel> */}
               <Input
                 id={field.field_name}
                 type={field.type}
