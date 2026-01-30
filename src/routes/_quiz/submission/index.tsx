@@ -23,6 +23,7 @@ function RouteComponent() {
 
   const { quiz, answers, resultPageId, getTotalMarks, setResultPageId } =
     useQuizStore()
+  console.log('👉 ~ RouteComponent ~ quiz:', quiz)
   const { mutate: submitQuiz, isPending: isSubmitting } = useQuizSubmission()
 
   const totalMarks = getTotalMarks()

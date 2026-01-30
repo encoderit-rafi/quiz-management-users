@@ -108,7 +108,7 @@ function RouteComponent() {
 
   const handleCopyLink = async () => {
     try {
-      const link = `${window.location.origin}/view/?quiz_id=${quiz?.uuid}&id=${quiz?.id}`
+      const link = `${window.location.origin}/view/?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`
       await navigator.clipboard.writeText(link)
       toast.success(t('result.copySuccess'))
     } catch (err) {
