@@ -32,6 +32,10 @@ function RouteComponent() {
     id: id,
   })
 
+  const result = resultData?.data || resultData
+  const background_image = result?.quiz?.background_image
+  const { isLoaded: isImageLoaded } = usePreloadImage(background_image)
+
   if (isPending) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
@@ -52,19 +56,10 @@ function RouteComponent() {
     )
   }
 
-  const result = resultData?.data || resultData
   const {
-    quiz: {
-      logo,
-      title,
-      heading,
-      primary_color,
-      secondary_color,
-      background_image,
-    },
+    quiz: { logo, title, heading, primary_color, secondary_color },
   } = result
   console.log('👉 ~ RouteComponent ~ result:', result)
-  const { isLoaded: isImageLoaded } = usePreloadImage(background_image)
   return (
     <div
       className="relative min-h-dvh"
