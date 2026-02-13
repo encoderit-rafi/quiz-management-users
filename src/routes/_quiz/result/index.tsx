@@ -194,7 +194,7 @@ function RouteComponent() {
         </div>
         {quiz?.resultDeliverySetting?.result_page_position == 'before' && (
           <>
-            <p className="mb-4">{t('result.advisorMeeting')}</p>
+            {/* <p className="mb-4">{t('result.advisorMeeting')}</p> */}
             <Link
               to="/submission"
               className={buttonVariants({
