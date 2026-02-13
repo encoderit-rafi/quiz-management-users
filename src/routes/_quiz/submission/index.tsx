@@ -109,6 +109,10 @@ function RouteComponent() {
     return <div>No quiz found</div>
   }
 
+  console.log(
+    '👉 ~ quiz?.resultDeliverySetting?.result_page_position:',
+    quiz?.resultDeliverySetting?.result_page_position,
+  )
   const onSubmit = (data: any) => {
     const total_score = getTotalMarks()
     const formattedAnswers = Object.entries(answers).map(([qId, aIds]) => {
@@ -126,19 +130,19 @@ function RouteComponent() {
       result_page_id: resultPageId || -1,
       answers: formattedAnswers,
     }
-
     submitQuiz(
       { uuid: quiz.uuid, payload },
       {
         onSuccess: () => {
           toast.success(t('submission.success'))
           reset()
-          quiz?.resultDeliverySetting?.result_page_position == 'before'
-            ? navigate({
-                to: '/view',
-                search: { quiz_id: quiz.uuid, id: quiz.id },
-              })
-            : navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
+          // quiz?.resultDeliverySetting?.result_page_position == 'before'
+          //   ? navigate({
+          //       to: '/view',
+          //       search: { quiz_id: quiz.uuid, id: quiz.id },
+          //     })
+          //   : navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
+          navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
         },
         onError: (err: any) => {
           toast.error(err?.response?.data?.message || t('submission.error'))
