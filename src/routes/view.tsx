@@ -83,7 +83,7 @@ function RouteComponent() {
           <div className="bg-(--primary-color)/10 py-3 border-b border-(--primary-color)/20">
             <Banner logo={logo || ''} title={title} heading={heading} />
           </div>
-          <div className="mx-auto my-10 max-w-2xl px-4">
+          <div className="mx-auto my-10">
             <div
               className="pointer-events-none prose prose-slate prose-custom max-w-none prose-headings:text-(--secondary-color) mb-10 prose-table:border prose-table:border-(--primary-color)/20 prose-th:border prose-th:border-(--primary-color)/20 prose-th:p-4 prose-td:border prose-td:border-(--primary-color)/20 prose-td:p-4"
               dangerouslySetInnerHTML={{

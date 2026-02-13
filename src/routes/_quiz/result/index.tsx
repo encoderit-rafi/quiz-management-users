@@ -140,7 +140,7 @@ function RouteComponent() {
   const result = resultData?.data || resultData
 
   return (
-    <div className="mx-auto my-10 max-w-2xl px-4">
+    <div className="mx-auto my-10">
       <div
         id="result-content"
         className="pointer-events-none prose prose-slate prose-custom max-w-none prose-headings:text-(--secondary-color) mb-10 prose-table:border prose-table:border-(--primary-color)/20 prose-th:border prose-th:border-(--primary-color)/20 prose-th:p-4 prose-td:border prose-td:border-(--primary-color)/20 prose-td:p-4"
@@ -173,7 +173,7 @@ function RouteComponent() {
           {quiz?.resultDeliverySetting?.enable_pdf_download && (
             <Button
               size={'icon'}
-              className={'size-8'}
+              className={'size-8 cursor-pointer'}
               onClick={handleDownloadPDF}
               disabled={isDownloading}
             >
@@ -186,7 +186,7 @@ function RouteComponent() {
           )}
           <Button
             size={'icon'}
-            className={'size-8 bg-amber-500 hover:bg-amber-400'}
+            className={'size-8 bg-amber-500 hover:bg-amber-400 cursor-pointer'}
             onClick={handleCopyLink}
           >
             <Copy />
@@ -200,7 +200,7 @@ function RouteComponent() {
               className={buttonVariants({
                 variant: 'primary-reverse',
                 size: 'lg',
-                className: 'flex items-center gap-2 max-w-xl! w-full',
+                className: 'flex items-center gap-2 max-w-xl! w-full mt-4',
               })}
             >
               <span>
