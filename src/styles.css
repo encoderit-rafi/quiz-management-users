@@ -2,6 +2,7 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/figtree';
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -122,9 +123,6 @@
   }
   body {
     @apply font-sans bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
   }
 }
 

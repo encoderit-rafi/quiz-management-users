@@ -143,7 +143,7 @@ function RouteComponent() {
     <div className="mx-auto my-10 px-2">
       <div
         id="result-content"
-        className="pointer-events-none prose prose-slate prose-custom max-w-none prose-headings:text-(--secondary-color) mb-10 prose-table:border prose-table:border-(--primary-color)/20 prose-th:border prose-th:border-(--primary-color)/20 prose-th:p-4 prose-td:border prose-td:border-(--primary-color)/20 prose-td:p-4"
+        className="pointer-events-none prose prose-sm  dark:prose-invert prose-slate! prose-custom! max-w-none prose-headings:text-(--secondary-color) mb-10 prose-table:border prose-table:border-(--primary-color)/20 prose-th:border prose-th:border-(--primary-color)/20 prose-th:p-4 prose-td:border prose-td:border-(--primary-color)/20 prose-td:p-4"
         dangerouslySetInnerHTML={{
           __html: result?.content || '',
         }}
