@@ -11,6 +11,7 @@ import NotFound from '@/components/app/not-found'
 import { ChevronsRight, Loader2 } from 'lucide-react'
 import { usePreloadImage } from '@/hooks/use-preload-image'
 import { useTranslation } from 'react-i18next'
+import parse from 'html-react-parser'
 const searchSchema = z.object({
   quiz_id: z.union([z.string(), z.number()]).optional().catch(undefined),
 })
@@ -108,10 +109,12 @@ function RouteComponent() {
             </Button>
             <div
               className="prose"
-              dangerouslySetInnerHTML={{
-                __html: quiz?.landing_page_text || '',
-              }}
-            />
+              // dangerouslySetInnerHTML={{
+              //   __html: quiz?.landing_page_text || '',
+              // }}
+            >
+              {parse(quiz?.landing_page_text || '')}
+            </div>
           </div>
         </div>
       </div>

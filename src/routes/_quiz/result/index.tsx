@@ -17,7 +17,7 @@ import {
 import { BASE_URL } from '@/consts'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
-
+import parse from "html-react-parser";
 export const Route = createFileRoute('/_quiz/result/')({
   component: RouteComponent,
 })
@@ -144,10 +144,12 @@ function RouteComponent() {
       <div
         id="result-content"
         className="pointer-events-none prose prose-sm  dark:prose-invert prose-slate! prose-custom! max-w-none prose-headings:text-(--secondary-color) mb-10 prose-table:border prose-table:border-(--primary-color)/20 prose-th:border prose-th:border-(--primary-color)/20 prose-th:p-4 prose-td:border prose-td:border-(--primary-color)/20 prose-td:p-4"
-        dangerouslySetInnerHTML={{
-          __html: result?.content || '',
-        }}
-      />
+        // dangerouslySetInnerHTML={{
+        //   __html: result?.content || '',
+        // }}
+      >
+        {parse(result?.content || '')}
+      </div>
       <div className="flex flex-col items-center justify-center my-4">
         <div className="flex items-center gap-2 justify-center">
           {quiz?.resultDeliverySetting?.enable_link_share && (

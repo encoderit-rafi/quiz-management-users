@@ -7,7 +7,7 @@ import QuestionBackground from '@/components/app/question-background'
 import QuestionCard from '@/components/app/question-card'
 import Banner from '@/components/app/banner'
 import { usePreloadImage } from '@/hooks/use-preload-image'
-
+import parse from "html-react-parser";
 const SearchParams = z.object({
   quiz_id: z.string(),
   id: z.union([z.number(), z.string()]),
@@ -55,7 +55,7 @@ function RouteComponent() {
     )
   }
 
-    quiz: { logo, title, heading, primary_color, secondary_color },
+  const { quiz: { logo, title, heading, primary_color, secondary_color },
   } = result
   return (
     <div
@@ -83,10 +83,12 @@ function RouteComponent() {
           <div className="mx-auto my-10 px-2">
             <div
               className="pointer-events-none prose prose-slate prose-custom max-w-none prose-headings:text-(--secondary-color) mb-10 prose-table:border prose-table:border-(--primary-color)/20 prose-th:border prose-th:border-(--primary-color)/20 prose-th:p-4 prose-td:border prose-td:border-(--primary-color)/20 prose-td:p-4"
-              dangerouslySetInnerHTML={{
-                __html: result?.content || '',
-              }}
-            />
+              // dangerouslySetInnerHTML={{
+              //   __html: result?.content || '',
+              // }}
+            >
+              {parse(result?.content || '')}
+            </div>
           </div>
         </QuestionCard>
       </div>
