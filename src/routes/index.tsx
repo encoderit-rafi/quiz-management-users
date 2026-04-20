@@ -23,7 +23,6 @@ export const Route = createFileRoute('/')({
 function RouteComponent() {
   const { t } = useTranslation()
   const { quiz_id } = Route.useSearch()
-  console.log('👉 ~ RouteComponent ~ quiz_id:', quiz_id)
   const {
     quizId: activeQuizId,
     setQuizId: setActiveQuizId,
@@ -74,9 +73,6 @@ function RouteComponent() {
       </div>
     )
 
-  // if (!quiz) {
-  //   throw notFound()
-  // }
   if (!effectiveId && !isLoading) {
     return <NotFound />
   }

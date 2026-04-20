@@ -23,7 +23,6 @@ function RouteComponent() {
 
   const { quiz, answers, resultPageId, getTotalMarks, setResultPageId } =
     useQuizStore()
-  console.log('👉 ~ RouteComponent ~ quiz:', quiz)
   const { mutate: submitQuiz, isPending: isSubmitting } = useQuizSubmission()
 
   const totalMarks = getTotalMarks()
@@ -109,10 +108,7 @@ function RouteComponent() {
     return <div>No quiz found</div>
   }
 
-  console.log(
-    '👉 ~ quiz?.resultDeliverySetting?.result_page_position:',
-    quiz?.resultDeliverySetting?.result_page_position,
-  )
+
   const onSubmit = (data: any) => {
     const total_score = getTotalMarks()
     const formattedAnswers = Object.entries(answers).map(([qId, aIds]) => {
@@ -136,12 +132,6 @@ function RouteComponent() {
         onSuccess: () => {
           toast.success(t('submission.success'))
           reset()
-          // quiz?.resultDeliverySetting?.result_page_position == 'before'
-          //   ? navigate({
-          //       to: '/view',
-          //       search: { quiz_id: quiz.uuid, id: quiz.id },
-          //     })
-          //   : navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
           navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
         },
         onError: (err: any) => {
@@ -162,7 +152,6 @@ function RouteComponent() {
         {(leadFields.find((f) => f.field_name === 'name')?.enabled !== false ||
           !leadFields.find((f) => f.field_name === 'name')) && (
           <Field>
-            {/* <FieldLabel htmlFor="name">{t('submission.form.name')}</FieldLabel> */}
             <Input
               id="name"
               placeholder={t('submission.form.namePlaceholder')}
@@ -189,7 +178,6 @@ function RouteComponent() {
 
             return (
               <Field key={field.field_name}>
-                {/* <FieldLabel htmlFor={field.field_name}>{fieldLabel}</FieldLabel> */}
                 <Input
                   id={field.field_name}
                   type={field.type}

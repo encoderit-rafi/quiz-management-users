@@ -1,5 +1,4 @@
 import { createFileRoute, useSearch } from '@tanstack/react-router'
-// import { useGetResult } from '../questions/-apis'
 import { Loader2 } from 'lucide-react'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
@@ -56,10 +55,8 @@ function RouteComponent() {
     )
   }
 
-  const {
     quiz: { logo, title, heading, primary_color, secondary_color },
   } = result
-  console.log('👉 ~ RouteComponent ~ result:', result)
   return (
     <div
       className="relative min-h-dvh"
@@ -77,7 +74,7 @@ function RouteComponent() {
           <Loader2 className="h-10 w-10 animate-spin text-(--primary-color)" />
         </div>
       )}
-      {/* <div className="relative pt-[20vh] pb-[5vh] z-10 px-2"> */}
+
       <div className="relative pt-[20vh] pb-[5vh] z-10 px-2">
         <QuestionCard>
           <div className="bg-(--primary-color)/10 py-3 border-b border-(--primary-color)/20">
