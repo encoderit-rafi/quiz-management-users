@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_quiz/questions/')({
   component: RouteComponent,
 })
 
-function RouteComponent() {
+export function RouteComponent() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const {

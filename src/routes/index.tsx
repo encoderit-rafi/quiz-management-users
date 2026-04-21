@@ -21,7 +21,7 @@ export const Route = createFileRoute('/')({
   component: RouteComponent,
 })
 
-function RouteComponent() {
+export function RouteComponent() {
   const { t } = useTranslation()
   const { quiz_id } = Route.useSearch()
   const {

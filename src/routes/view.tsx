@@ -18,7 +18,7 @@ export const Route = createFileRoute('/view')({
   component: RouteComponent,
 })
 
-function RouteComponent() {
+export function RouteComponent() {
   const { t } = useTranslation()
   const { quiz_id, id } = useSearch({ from: Route.id })
 

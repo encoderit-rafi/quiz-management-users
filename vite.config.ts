@@ -7,18 +7,23 @@ import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
 // import netlify from '@netlify/vite-plugin-tanstack-start'
 const config = defineConfig({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+  },
   plugins: [
     devtools(),
-    nitro(),
+    !process.env.VITEST && nitro(),
     // netlify(),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
     tailwindcss(),
-    tanstackStart(),
+    !process.env.VITEST && tanstackStart(),
     viteReact(),
-  ],
+  ].filter(Boolean),
 })
 
 export default config

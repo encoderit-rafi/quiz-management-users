@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_quiz')({
   component: RouteComponent,
 })
 
-function RouteComponent() {
+export function RouteComponent() {
   const { quiz, currentQuestionIndex } = useQuizStore()
   const {
     primary_color,

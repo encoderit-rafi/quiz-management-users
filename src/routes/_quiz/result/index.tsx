@@ -22,7 +22,7 @@ export const Route = createFileRoute('/_quiz/result/')({
   component: RouteComponent,
 })
 
-function RouteComponent() {
+export function RouteComponent() {
   const { t } = useTranslation()
   const { quiz, getTotalMarks } = useQuizStore()
   const [isDownloading, setIsDownloading] = useState(false)

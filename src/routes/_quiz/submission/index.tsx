@@ -17,7 +17,7 @@ export const Route = createFileRoute('/_quiz/submission/')({
   component: RouteComponent,
 })
 
-function RouteComponent() {
+export function RouteComponent() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
