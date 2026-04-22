@@ -2,6 +2,7 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from '@/components/ui/sonner'
 import '@/lib/i18n'
+import ErrorFallback from '@/components/app/error-fallback'
 
 import appCss from '../styles.css?url'
 
@@ -28,7 +29,7 @@ export const Route = createRootRoute({
       },
     ],
   }),
-
+  errorComponent: ({ error, reset }) => <ErrorFallback error={error} reset={reset} />,
   shellComponent: RootDocument,
 })
 

@@ -107,13 +107,38 @@ export function RouteComponent() {
   }
 
   const handleCopyLink = async () => {
+    const link = `${window.location.origin}/view/?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`
+    
     try {
-      const link = `${window.location.origin}/view/?quiz_id=${quiz?.uuid}&id=${resultData?.data?.id}`
-      await navigator.clipboard.writeText(link)
-      toast.success(t('result.copySuccess'))
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(link)
+        toast.success(t('result.copySuccess'))
+        return
+      }
+      throw new Error('Clipboard API unavailable')
     } catch (err) {
-      console.error('Failed to copy link:', err)
-      toast.error(t('result.copyError'))
+      // Fallback to textarea for HTTP or unsupported browsers
+      try {
+        const textArea = document.createElement('textarea')
+        textArea.value = link
+        textArea.style.position = 'fixed'
+        textArea.style.left = '-//9999px'
+        textArea.style.top = '0'
+        document.body.appendChild(textArea)
+        textArea.focus()
+        textArea.select()
+        const successful = document.execCommand('copy')
+        document.body.removeChild(textArea)
+        
+        if (successful) {
+          toast.success(t('result.copySuccess'))
+        } else {
+          throw new Error('execCommand copy failed')
+        }
+      } catch (fallbackErr) {
+        console.error('Failed to copy link:', fallbackErr)
+        toast.error(t('result.copyError'))
+      }
     }
   }
 

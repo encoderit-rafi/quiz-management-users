@@ -4,6 +4,8 @@ import { RouteComponent } from '../view'
 import { useGetResult } from '../_quiz/questions/-apis'
 import { usePreloadImage } from '@/hooks/use-preload-image'
 import * as TanStackRouter from '@tanstack/react-router'
+import ErrorFallback from '@/components/app/error-fallback'
+import React from 'react'
 
 // Mock dependencies
 vi.mock('@tanstack/react-router', async (importOriginal) => {
@@ -46,6 +48,26 @@ vi.mock('@/components/app/banner', () => ({
   default: () => <div data-testid="banner" />,
 }))
 
+// Simple Error Boundary for testing
+class TestErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+  componentDidCatch(error: any, errorInfo: any) {
+    this.setState({ hasError: true })
+  }
+  render() {
+    if (this.state.hasError) {
+      return <ErrorFallback error={new Error('Test Crash')} />
+    }
+    return this.props.children
+  }
+}
+
 describe('View RouteComponent', () => {
   const mockResult = {
     data: {
@@ -82,5 +104,23 @@ describe('View RouteComponent', () => {
     render(<RouteComponent />)
     expect(screen.getByTestId('card')).toBeInTheDocument()
     expect(screen.getByText('Result Content')).toBeInTheDocument()
+  })
+
+  it('falls back to ErrorFallback when a child component crashes', () => {
+    const Crasher = () => {
+      throw new Error('Crashed!')
+    }
+    
+    // Suppress console.error for the expected crash
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    render(
+      <TestErrorBoundary>
+        <Crasher />
+      </TestErrorBoundary>
+    )
+    
+    expect(screen.getByText('errors.fallback.title')).toBeInTheDocument()
+    consoleSpy.mockRestore()
   })
 })

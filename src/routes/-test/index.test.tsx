@@ -4,6 +4,8 @@ import * as Index from '../index'
 import { useQuizStore } from '@/store/quiz.store'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { usePreloadImage } from '@/hooks/use-preload-image'
+import ErrorFallback from '@/components/app/error-fallback'
+import React from 'react'
 
 console.log('Index:', Index);
 
@@ -62,6 +64,26 @@ vi.mock('../_quiz/questions/-apis/use-quiz-view-count.api', () => ({
   useQuizViewCount: vi.fn(() => ({ mutate: vi.fn() })),
 }))
 
+// Simple Error Boundary for testing
+class TestErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+  componentDidCatch(error: any, errorInfo: any) {
+    this.setState({ hasError: true })
+  }
+  render() {
+    if (this.state.hasError) {
+      return <ErrorFallback error={new Error('Test Crash')} />
+    }
+    return this.props.children
+  }
+}
+
 describe('Index RouteComponent', () => {
   const mockQuiz = {
     id: 1,
@@ -102,7 +124,7 @@ describe('Index RouteComponent', () => {
     expect(document.querySelector('.animate-spin')).toBeInTheDocument()
   })
 
-  it('renders quiz content when quiz is loaded', () => {
+  it('renders quiz content when quiz loaded', () => {
     ;(useQuery as any).mockReturnValue({ data: mockQuiz, isLoading: false })
     render(<Index.RouteComponent />)
     expect(screen.getByText('Test Quiz')).toBeInTheDocument()
@@ -117,5 +139,23 @@ describe('Index RouteComponent', () => {
     ;(Index.Route.useSearch as any).mockReturnValue({ quiz_id: null })
     render(<Index.RouteComponent />)
     expect(screen.getByText('404')).toBeInTheDocument()
+  })
+
+  it('falls back to ErrorFallback when a child component crashes', () => {
+    const Crasher = () => {
+      throw new Error('Crashed!')
+    }
+    
+    // Suppress console.error for the expected crash
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    render(
+      <TestErrorBoundary>
+        <Crasher />
+      </TestErrorBoundary>
+    )
+    
+    expect(screen.getByText('errors.fallback.title')).toBeInTheDocument()
+    consoleSpy.mockRestore()
   })
 })

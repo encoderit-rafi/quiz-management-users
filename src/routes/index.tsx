@@ -12,6 +12,8 @@ import { ChevronsRight, Loader2 } from 'lucide-react'
 import { usePreloadImage } from '@/hooks/use-preload-image'
 import { useTranslation } from 'react-i18next'
 import parse from 'html-react-parser'
+import { toast } from 'sonner'
+import ErrorFallback from '@/components/app/error-fallback'
 const searchSchema = z.object({
   quiz_id: z.union([z.string(), z.number()]).optional().catch(undefined),
 })
@@ -19,9 +21,11 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/')({
   validateSearch: searchSchema,
   component: RouteComponent,
+  errorComponent: ({ error, reset }) => <ErrorFallback error={error} reset={reset} />,
 })
 
 export function RouteComponent() {
+// ...
   const { t } = useTranslation()
   const { quiz_id } = Route.useSearch()
   const {
@@ -41,7 +45,16 @@ export function RouteComponent() {
   useEffect(() => {
     const id = quiz?.id
     if (id) {
-      const viewQuizzes = JSON.parse(localStorage.getItem('view_quiz') || '[]')
+      let viewQuizzes: any[] = []
+      try {
+        viewQuizzes = JSON.parse(localStorage.getItem('view_quiz') || '[]')
+      } catch (e) {
+        toast.error('Something went wrong getting quiz', {
+          description: 'we deleted the corrupted data',
+        })
+        localStorage.removeItem('view_quiz')
+      }
+
       if (!viewQuizzes.includes(id)) {
         addViewCount(id)
         localStorage.setItem('view_quiz', JSON.stringify([...viewQuizzes, id]))

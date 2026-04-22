@@ -3,6 +3,7 @@ import { useQuizStore } from '@/store/quiz.store'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import axios from 'axios'
 import { useQuizSubmission } from '../questions/-apis/use-quiz-submission.api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -94,13 +95,14 @@ export function RouteComponent() {
   }
 
   const schema = z.object(schemaShape)
+  type FormValues = z.infer<typeof schema>
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
+  } = useForm<FormValues>({
     resolver: zodResolver(schema),
   })
 
@@ -108,8 +110,7 @@ export function RouteComponent() {
     return <div>No quiz found</div>
   }
 
-
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormValues) => {
     const total_score = getTotalMarks()
     const formattedAnswers = Object.entries(answers).map(([qId, aIds]) => {
       const normalizedAIds = Array.isArray(aIds) ? aIds : [aIds]
@@ -134,8 +135,12 @@ export function RouteComponent() {
           reset()
           navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
         },
-        onError: (err: any) => {
-          toast.error(err?.response?.data?.message || t('submission.error'))
+        onError: (err: Error) => {
+          if (axios.isAxiosError(err)) {
+            toast.error(err.response?.data?.message || t('submission.error'))
+          } else {
+            toast.error(t('submission.error'))
+          }
         },
       },
     )

@@ -6,9 +6,11 @@ import { useQuizStore } from '@/store/quiz.store'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { usePreloadImage } from '@/hooks/use-preload-image'
 import { Loader2 } from 'lucide-react'
+import ErrorFallback from '@/components/app/error-fallback'
 
 export const Route = createFileRoute('/_quiz')({
   component: RouteComponent,
+  errorComponent: ({ error, reset }) => <ErrorFallback error={error} reset={reset} />,
 })
 
 export function RouteComponent() {

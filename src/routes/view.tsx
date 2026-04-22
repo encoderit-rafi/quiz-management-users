@@ -8,6 +8,7 @@ import QuestionCard from '@/components/app/question-card'
 import Banner from '@/components/app/banner'
 import { usePreloadImage } from '@/hooks/use-preload-image'
 import parse from "html-react-parser";
+import ErrorFallback from '@/components/app/error-fallback'
 const SearchParams = z.object({
   quiz_id: z.string(),
   id: z.union([z.number(), z.string()]),
@@ -16,9 +17,11 @@ const SearchParams = z.object({
 export const Route = createFileRoute('/view')({
   validateSearch: SearchParams,
   component: RouteComponent,
+  errorComponent: ({ error, reset }) => <ErrorFallback error={error} reset={reset} />,
 })
 
 export function RouteComponent() {
+// ...
   const { t } = useTranslation()
   const { quiz_id, id } = useSearch({ from: Route.id })
 
