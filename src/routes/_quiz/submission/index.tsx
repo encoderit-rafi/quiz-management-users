@@ -21,25 +21,34 @@ function RouteComponent() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const { quiz, answers, resultPageId, getTotalMarks, setResultPageId } =
-    useQuizStore()
-  console.log('👉 ~ RouteComponent ~ quiz:', quiz)
+  const {
+    quiz,
+    answers,
+    resultPageId,
+    getTotalMarks,
+    setResultPageId,
+    setSubmissionId,
+  } = useQuizStore()
+
   const { mutate: submitQuiz, isPending: isSubmitting } = useQuizSubmission()
 
+  const isCategoryMode = quiz?.scoring_mode === 'category'
   const totalMarks = getTotalMarks()
-  const { data: resultData, isPending } = useGetResultPage({
+
+  // Only pre-fetch result page for total-score mode
+  const { data: resultData, isPending: isResultPending } = useGetResultPage({
     quiz_id: quiz?.uuid || '',
-    mark: totalMarks,
+    mark: isCategoryMode ? undefined : totalMarks,
   })
 
   useEffect(() => {
-    if (resultData) {
+    if (!isCategoryMode && resultData) {
       const data = resultData?.data || resultData
       if (data?.id) {
         setResultPageId(data.id)
       }
     }
-  }, [resultData, setResultPageId])
+  }, [resultData, isCategoryMode, setResultPageId])
 
   const leadFields = quiz?.leadFormSetting?.fields || []
 
@@ -109,10 +118,6 @@ function RouteComponent() {
     return <div>No quiz found</div>
   }
 
-  console.log(
-    '👉 ~ quiz?.resultDeliverySetting?.result_page_position:',
-    quiz?.resultDeliverySetting?.result_page_position,
-  )
   const onSubmit = (data: any) => {
     const total_score = getTotalMarks()
     const formattedAnswers = Object.entries(answers).map(([qId, aIds]) => {
@@ -127,21 +132,24 @@ function RouteComponent() {
       quiz_id: quiz.id,
       user_data: data,
       total_score,
-      result_page_id: resultPageId || -1,
+      result_page_id: isCategoryMode ? null : (resultPageId || null),
       answers: formattedAnswers,
     }
+
     submitQuiz(
       { uuid: quiz.uuid, payload },
       {
-        onSuccess: () => {
+        onSuccess: (response) => {
           toast.success(t('submission.success'))
           reset()
-          // quiz?.resultDeliverySetting?.result_page_position == 'before'
-          //   ? navigate({
-          //       to: '/view',
-          //       search: { quiz_id: quiz.uuid, id: quiz.id },
-          //     })
-          //   : navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
+
+          // For category mode, store the submission ID so the result page
+          // can fetch the server-computed result via submission_id
+          if (isCategoryMode) {
+            const submissionId = response?.data?.id ?? null
+            setSubmissionId(submissionId)
+          }
+
           navigate({ to: '/result', search: { quiz_id: quiz.uuid } })
         },
         onError: (err: any) => {
@@ -150,6 +158,9 @@ function RouteComponent() {
       },
     )
   }
+
+  // For total mode, block the submit button while the result page is pre-fetching
+  const isWaiting = !isCategoryMode && isResultPending
 
   return (
     <div className="mx-auto my-10 max-w-xl">
@@ -162,7 +173,6 @@ function RouteComponent() {
         {(leadFields.find((f) => f.field_name === 'name')?.enabled !== false ||
           !leadFields.find((f) => f.field_name === 'name')) && (
           <Field>
-            {/* <FieldLabel htmlFor="name">{t('submission.form.name')}</FieldLabel> */}
             <Input
               id="name"
               placeholder={t('submission.form.namePlaceholder')}
@@ -189,7 +199,6 @@ function RouteComponent() {
 
             return (
               <Field key={field.field_name}>
-                {/* <FieldLabel htmlFor={field.field_name}>{fieldLabel}</FieldLabel> */}
                 <Input
                   id={field.field_name}
                   type={field.type}
@@ -213,10 +222,10 @@ function RouteComponent() {
           variant="primary-reverse"
           size="lg"
           className="w-full h-14 text-lg"
-          disabled={isSubmitting || isPending}
+          disabled={isSubmitting || isWaiting}
         >
           <div className="flex items-center gap-2">
-            {isPending ? t('common.pleaseWait') : t('common.submit')}
+            {isWaiting ? t('common.pleaseWait') : t('common.submit')}
             {isSubmitting ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             ) : (

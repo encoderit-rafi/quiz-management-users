@@ -1,5 +1,11 @@
 import { z } from 'zod'
 
+// Answer category score schema
+export const AnswerCategoryScoreSchema = z.object({
+  quiz_category_id: z.number(),
+  points: z.number(),
+})
+
 // Answer Schema
 export const AnswerSchema = z.object({
   id: z.number(),
@@ -7,6 +13,7 @@ export const AnswerSchema = z.object({
   answer_text: z.string(),
   points: z.number(),
   order: z.number(),
+  category_scores: z.array(AnswerCategoryScoreSchema).optional(),
 })
 
 // Question Schema
@@ -20,6 +27,16 @@ export const QuestionSchema = z.object({
   answers: z.array(AnswerSchema),
 })
 
+// Quiz category schema
+export const QuizCategorySchema = z.object({
+  id: z.number(),
+  quiz_id: z.number(),
+  name: z.string(),
+  slug: z.string(),
+  description: z.string().nullable().optional(),
+  order: z.number(),
+})
+
 // Result Page Schema
 export const ResultPageSchema = z.object({
   id: z.number(),
@@ -27,8 +44,8 @@ export const ResultPageSchema = z.object({
   title: z.string(),
   content: z.string(), // HTML string
   image: z.string().url().nullable(),
-  min_score: z.number(),
-  max_score: z.number(),
+  min_score: z.number().nullable(),
+  max_score: z.number().nullable(),
   order: z.number(),
 })
 
@@ -85,9 +102,12 @@ export const QuizSchema = z.object({
 
   views: z.union([z.number(), z.string()]), // API might send either
 
+  scoring_mode: z.enum(['total', 'category']).default('total'),
+
   client_id: z.number().nullable().optional(),
   embed_code: z.string().nullable(),
 
+  categories: z.array(QuizCategorySchema).optional(),
   questions: z.array(QuestionSchema).optional(),
   resultPages: z.array(ResultPageSchema).optional(),
   leadFormSetting: LeadFormSettingSchema.nullable().optional(),
@@ -98,6 +118,8 @@ export const QuizSchema = z.object({
 export type TQuizSchema = z.infer<typeof QuizSchema>
 export type TQuestionSchema = z.infer<typeof QuestionSchema>
 export type TAnswerSchema = z.infer<typeof AnswerSchema>
+export type TAnswerCategoryScore = z.infer<typeof AnswerCategoryScoreSchema>
+export type TQuizCategory = z.infer<typeof QuizCategorySchema>
 export type TResultPageSchema = z.infer<typeof ResultPageSchema>
 export type TLeadFormField = z.infer<typeof LeadFormFieldSchema>
 export type TLeadFormSetting = z.infer<typeof LeadFormSettingSchema>

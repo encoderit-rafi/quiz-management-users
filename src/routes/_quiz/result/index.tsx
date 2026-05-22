@@ -24,16 +24,18 @@ export const Route = createFileRoute('/_quiz/result/')({
 
 function RouteComponent() {
   const { t } = useTranslation()
-  const { quiz, getTotalMarks } = useQuizStore()
+  const { quiz, getTotalMarks, submissionId } = useQuizStore()
   const [isDownloading, setIsDownloading] = useState(false)
   const totalMarks = getTotalMarks()
+  const isCategoryMode = quiz?.scoring_mode === 'category'
   const {
     data: resultData,
     isPending,
     isError,
   } = useGetResultPage({
     quiz_id: quiz?.uuid || '',
-    mark: totalMarks,
+    mark: isCategoryMode ? undefined : totalMarks,
+    submission_id: isCategoryMode ? submissionId : undefined,
   })
 
   const handleDownloadPDF = async () => {
