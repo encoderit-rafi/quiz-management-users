@@ -10,9 +10,11 @@ interface QuizState {
   answers: Record<number, number[]> // questionId -> answerIds[]
   started_at: string | null
   resultPageId: number | null
+  submissionId: number | null
   setQuizId: (id: string | number | null | undefined) => void
   setQuiz: (quiz: TQuizSchema | null) => void
   setResultPageId: (id: number | null) => void
+  setSubmissionId: (id: number | null) => void
   setCurrentQuestionIndex: (index: number) => void
   setAnswer: (
     questionId: number,
@@ -35,6 +37,7 @@ export const useQuizStore = create<QuizState>()(
       answers: {},
       started_at: null,
       resultPageId: null,
+      submissionId: null,
       setQuizId: (id) =>
         set((state) => {
           const normalizedId =
@@ -46,6 +49,7 @@ export const useQuizStore = create<QuizState>()(
               answers: {},
               started_at: null,
               resultPageId: null,
+              submissionId: null,
             }
           }
           return { quizId: normalizedId }
@@ -59,11 +63,13 @@ export const useQuizStore = create<QuizState>()(
               answers: {},
               started_at: quiz ? new Date().toISOString() : null,
               resultPageId: null,
+              submissionId: null,
             }
           }
           return { quiz }
         }),
       setResultPageId: (id) => set({ resultPageId: id }),
+      setSubmissionId: (id) => set({ submissionId: id }),
       setCurrentQuestionIndex: (index) => set({ currentQuestionIndex: index }),
       setAnswer: (questionId, answerId, multiselect = false) =>
         set((state) => {
