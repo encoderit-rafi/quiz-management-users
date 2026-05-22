@@ -5,7 +5,7 @@ export type QuizSubmissionPayload = {
   quiz_id: number
   user_data: Record<string, any>
   total_score: number
-  result_page_id: number
+  result_page_id: number | null
   answers: {
     question_id: number
     answer_ids: number[]
