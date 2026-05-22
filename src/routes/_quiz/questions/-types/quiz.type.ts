@@ -55,7 +55,8 @@ export const LeadFormFieldSchema = z.object({
   label: z.string(),
   required: z.boolean(),
   enabled: z.boolean(),
-  field_name: z.string(),
+  field_name: z.string().optional(),
+  name: z.string().optional(),
   // options: z.array(z.string()).optional(),
 })
 
